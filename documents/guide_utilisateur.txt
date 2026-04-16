@@ -1,0 +1,177 @@
+GUIDE UTILISATEUR - SYSTÈME DE GESTION DOCUMENTAIRE
+Version 2.4 - Mars 2026
+
+=================================================================
+1. INTRODUCTION
+=================================================================
+
+Ce guide explique comment utiliser le système de gestion documentaire pour organiser, partager et rechercher vos documents de manière efficace.
+
+Le système est accessible via :
+- Navigateur web : https://app.example.com
+- Application iOS : App Store (rechercher "DocManager")
+- Application Android : Google Play (rechercher "DocManager")
+- API REST : https://api.example.com/v2
+
+=================================================================
+2. PREMIERS PAS
+=================================================================
+
+2.1 Connexion
+-------------
+1. Rendez-vous sur https://app.example.com
+2. Entrez votre adresse email professionnelle
+3. Entrez votre mot de passe
+4. Cliquez sur "Se connecter"
+
+Si c'est votre première connexion, vous devrez accepter les conditions d'utilisation et configurer votre profil.
+
+2.2 Tableau de bord
+-------------------
+Le tableau de bord affiche :
+- Vos documents récents (5 derniers)
+- Les documents partagés avec vous
+- L'espace de stockage utilisé
+- Les notifications importantes
+
+2.3 Navigation principale
+-------------------------
+- Mes Documents : tous vos fichiers personnels
+- Partagés avec moi : documents que des collègues ont partagés
+- Favoris : documents marqués comme favoris
+- Corbeille : fichiers supprimés (conservés 30 jours)
+- Paramètres : configuration du compte
+
+=================================================================
+3. GESTION DES DOCUMENTS
+=================================================================
+
+3.1 Importer un document
+------------------------
+Méthode 1 - Glisser-déposer :
+Faites glisser vos fichiers depuis l'explorateur Windows ou le Finder Mac directement dans la zone de dépôt.
+
+Méthode 2 - Bouton d'import :
+1. Cliquez sur le bouton "+ Nouveau" en haut à gauche
+2. Sélectionnez "Importer un fichier"
+3. Choisissez votre fichier (taille max : 100 Mo)
+4. Cliquez sur "Ouvrir"
+
+Méthode 3 - Import en masse :
+Pour importer plusieurs fichiers, sélectionnez-les tous dans l'explorateur de fichiers et glissez-les simultanément.
+
+3.2 Organiser en dossiers
+-------------------------
+Créer un dossier :
+1. Cliquez sur "+ Nouveau" > "Nouveau dossier"
+2. Donnez un nom au dossier
+3. Choisissez l'emplacement parent
+4. Cliquez sur "Créer"
+
+Déplacer un document :
+- Glissez-déposez le document vers le dossier cible
+- Ou faites un clic droit > "Déplacer vers..." et sélectionnez la destination
+
+3.3 Recherche avancée
+---------------------
+La barre de recherche principale permet de trouver des documents par :
+- Nom du fichier
+- Contenu du fichier (recherche full-text)
+- Date de création ou modification
+- Type de fichier
+- Auteur
+
+Filtres disponibles :
+- Date : aujourd'hui, cette semaine, ce mois, année en cours, plage personnalisée
+- Type : PDF, Word, Excel, Image, Autre
+- Taille : petit (<1Mo), moyen (1-10Mo), grand (>10Mo)
+- Propriétaire : mes fichiers, partagés avec moi
+
+3.4 Versioning
+--------------
+Le système conserve automatiquement les 10 dernières versions de chaque document.
+Pour accéder à l'historique des versions :
+1. Clic droit sur le document
+2. Sélectionnez "Historique des versions"
+3. Choisissez la version à restaurer ou télécharger
+
+=================================================================
+4. COLLABORATION
+=================================================================
+
+4.1 Partage de documents
+------------------------
+Partage interne (avec un collègue) :
+1. Clic droit sur le document > "Partager"
+2. Entrez l'email du collègue
+3. Choisissez les droits : Lecteur, Commentateur, ou Éditeur
+4. Ajoutez un message optionnel
+5. Cliquez sur "Partager"
+
+Partage externe (lien public) :
+1. Clic droit sur le document > "Obtenir le lien"
+2. Choisissez : "Lecture seule" ou "Protégé par mot de passe"
+3. Copiez et partagez le lien
+Note : Les liens expirent après 7 jours par défaut.
+
+4.2 Commentaires
+----------------
+Pour ajouter un commentaire :
+1. Ouvrez le document en mode prévisualisation
+2. Sélectionnez le texte concerné
+3. Cliquez sur l'icône de commentaire
+4. Rédigez votre commentaire et validez
+
+Les membres avec accès au document recevront une notification par email.
+
+4.3 Permissions
+---------------
+Niveaux de permission disponibles :
+- Propriétaire : tous les droits (modifier, partager, supprimer)
+- Éditeur : peut modifier le contenu et télécharger
+- Commentateur : peut ajouter des commentaires, ne peut pas modifier
+- Lecteur : lecture et téléchargement uniquement
+
+=================================================================
+5. PARAMÈTRES DU COMPTE
+=================================================================
+
+5.1 Profil
+----------
+Informations modifiables :
+- Nom et prénom
+- Photo de profil
+- Numéro de téléphone
+- Langue de l'interface (français, anglais, espagnol, allemand)
+- Fuseau horaire
+
+5.2 Notifications
+-----------------
+Configurez vos préférences de notification pour :
+- Nouveaux partages
+- Modifications de documents partagés
+- Commentaires sur vos documents
+- Rappels d'expiration de liens
+- Résumé hebdomadaire
+
+Format de notification : email, notification push (mobile), ou les deux.
+
+5.3 Intégrations
+----------------
+Connectez votre compte à :
+- Microsoft 365 (OneDrive, SharePoint)
+- Google Workspace (Drive, Docs)
+- Slack (notifications dans les canaux)
+- Microsoft Teams
+- Zapier (automatisations)
+
+=================================================================
+6. SUPPORT ET ASSISTANCE
+=================================================================
+
+Centre d'aide : help.example.com
+Support par email : support@example.com (réponse sous 24h)
+Chat en direct : disponible du lundi au vendredi, 9h-18h (heure de Paris)
+Téléphone : +33 1 23 45 67 89 (Pro et Entreprise uniquement)
+
+Statut du service en temps réel : status.example.com

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture & Diagrammes UML — Plateforme Dev</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:       #0d0f14;
+    --surface:  #141720;
+    --card:     #1a1e2b;
+    --border:   #252a3a;
+    --accent:   #5b7cfa;
+    --accent2:  #a78bfa;
+    --teal:     #2dd4bf;
+    --amber:    #fbbf24;
+    --rose:     #f87171;
+    --green:    #34d399;
+    --text:     #e2e8f0;
+    --muted:    #64748b;
+    --glow:     rgba(91,124,250,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a0d18 0%, #111422 40%, #0d1428 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 48px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(91,124,250,0.08), transparent);
+  }
+  header::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 60% at 20% 80%, rgba(167,139,250,0.06), transparent);
+  }
+  .header-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+  .badge {
+    display: inline-block;
+    background: rgba(91,124,250,0.15);
+    border: 1px solid rgba(91,124,250,0.3);
+    color: var(--accent);
+    padding: 4px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  h1 em { font-style: italic; color: var(--accent2); }
+  .subtitle {
+    color: var(--muted);
+    max-width: 620px;
+    font-size: 16px;
+    font-weight: 300;
+  }
+  .meta-row {
+    display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap;
+  }
+  .meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .meta-item span { color: var(--text); font-weight: 500; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,15,20,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; gap: 4px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  nav a {
+    display: block; padding: 14px 16px;
+    color: var(--muted); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  nav a:hover { color: var(--text); border-color: var(--accent); }
+
+  /* MAIN */
+  main { max-width: 1100px; margin: 0 auto; padding: 56px 48px 100px; }
+
+  /* SECTIONS */
+  section { margin-bottom: 80px; }
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    color: var(--accent);
+    background: rgba(91,124,250,0.1);
+    border: 1px solid rgba(91,124,250,0.25);
+    padding: 4px 10px; border-radius: 6px;
+    letter-spacing: 0.1em;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem; color: #fff;
+  }
+  h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem; color: var(--text);
+    margin: 32px 0 16px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(91,124,250,0.3); }
+  .card-accent { border-left: 3px solid var(--accent); }
+  .card-teal { border-left: 3px solid var(--teal); }
+  .card-amber { border-left: 3px solid var(--amber); }
+  .card-rose { border-left: 3px solid var(--rose); }
+  .card-green { border-left: 3px solid var(--green); }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width:768px) { .grid-2,.grid-3 { grid-template-columns: 1fr; } }
+
+  /* MERMAID WRAPPER */
+  .diagram-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 24px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .diagram-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mermaid { display: flex; justify-content: center; }
+  .mermaid svg { max-width: 100%; border-radius: 8px; }
+
+  /* ARCH BLOCK */
+  .arch-stack {
+    display: flex; flex-direction: column; gap: 2px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .arch-layer {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 16px;
+    transition: background 0.2s;
+  }
+  .arch-layer:last-child { border-bottom: none; }
+  .arch-layer:hover { background: rgba(91,124,250,0.04); }
+  .arch-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+  .arch-label { font-weight: 600; color: var(--text); font-size: 14px; }
+  .arch-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .arch-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; padding: 2px 8px;
+    border-radius: 4px; border: 1px solid;
+  }
+  .tag-blue { color: var(--accent); border-color: rgba(91,124,250,0.3); background: rgba(91,124,250,0.08); }
+  .tag-teal { color: var(--teal); border-color: rgba(45,212,191,0.3); background: rgba(45,212,191,0.08); }
+  .tag-amber { color: var(--amber); border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.08); }
+  .tag-rose { color: var(--rose); border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
+  .tag-green { color: var(--green); border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.08); }
+  .tag-purple { color: var(--accent2); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.08); }
+
+  /* REQ LIST */
+  .req-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .req-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 20px;
+    transition: border-color 0.2s;
+  }
+  .req-item:hover { border-color: rgba(91,124,250,0.3); }
+  .req-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    color: var(--accent); background: rgba(91,124,250,0.1);
+    border: 1px solid rgba(91,124,250,0.2);
+    padding: 3px 8px; border-radius: 4px;
+    flex-shrink: 0; margin-top: 2px;
+    min-width: 52px; text-align: center;
+  }
+  .req-id.nf { color: var(--teal); background: rgba(45,212,191,0.1); border-color: rgba(45,212,191,0.2); }
+  .req-body { flex: 1; }
+  .req-title { font-weight: 600; color: var(--text); font-size: 14px; }
+  .req-desc { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .req-prio {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    padding: 2px 8px; border-radius: 100px; flex-shrink: 0;
+  }
+  .prio-high { background: rgba(248,113,113,0.1); color: var(--rose); border: 1px solid rgba(248,113,113,0.25); }
+  .prio-med { background: rgba(251,191,36,0.1); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+  .prio-low { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+
+  /* TABLE */
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  th {
+    background: rgba(91,124,250,0.08);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px; text-align: left;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid rgba(37,42,58,0.5); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(91,124,250,0.03); }
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; background: rgba(91,124,250,0.1);
+    padding: 2px 6px; border-radius: 4px; color: var(--accent2);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    text-align: center;
+    font-size: 12px; color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="badge">📐 Analyse Technique</div>
+    <h1>Architecture & <em>Diagrammes UML</em></h1>
+    <p class="subtitle">Plateforme collaborative de gestion de développement avec agents IA intégrés — extrait du wiki interne.</p>
+    <div class="meta-row">
+      <div class="meta-item">📅 Source : <span>dev.wiki (GitLab)</span></div>
+      <div class="meta-item">🏗️ Stack : <span>Angular · PHP 7.4 · MySQL · Python</span></div>
+      <div class="meta-item">🤖 IA : <span>Claude · GLM · Gemini · Ollama</span></div>
+      <div class="meta-item">📆 Analyse : <span>Avril 2026</span></div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#architecture">Architecture</a>
+    <a href="#classes">Diagramme de Classes</a>
+    <a href="#sequence">Diagramme de Séquence</a>
+    <a href="#usecase">Cas d'Utilisation</a>
+    <a href="#activite">Diagramme d'Activité</a>
+    <a href="#fonctionnel">Besoins Fonctionnels</a>
+    <a href="#nonfonctionnel">Besoins Non-Fonctionnels</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ───── ARCHITECTURE ───── -->
+<section id="architecture">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <h2>Architecture Globale</h2>
+  </div>
+
+  <div class="arch-stack" style="margin-bottom:32px">
+    <div class="arch-layer">
+      <div class="arch-icon">🌐</div>
+      <div>
+        <div class="arch-label">Frontend Angular 18</div>
+        <div class="arch-desc">MindMap (MindElixir), Dashboard tickets, Documentation (Quill), Chat IA — port 4200</div>
+        <div class="arch-tags">
+          <span class="tag tag-blue">Angular 18</span>
+          <span class="tag tag-teal">TypeScript</span>
+          <span class="tag tag-purple">MindElixir</span>
+          <span class="tag tag-amber">Quill</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-icon">⚙️</div>
+      <div>
+        <div class="arch-label">API PHP 7.4 — Sales API</div>
+        <div class="arch-desc">Endpoints REST <code>/Api/sales/dev/*</code>, JWT auth, routing multi-tenant</div>
+        <div class="arch-tags">
+          <span class="tag tag-rose">PHP 7.4</span>
+          <span class="tag tag-blue">JWT</span>
+          <span class="tag tag-amber">REST</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-icon">📊</div>
+      <div>
+        <div class="arch-label">Backend KoolReport</div>
+        <div class="arch-desc">Tableaux de gestion, rapports, analytics, interfaces CRUD</div>
+        <div class="arch-tags">
+          <span class="tag tag-rose">PHP 7.4</span>
+          <span class="tag tag-purple">KoolReport</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-icon">🗄️</div>
+      <div>
+        <div class="arch-label">Base de données MySQL</div>
+        <div class="arch-desc">17 tables dev_* + tables projects + jqcalendar — serveur 172.16.16.18</div>
+        <div class="arch-tags">
+          <span class="tag tag-green">MySQL</span>
+          <span class="tag tag-teal">Multi-tenant</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-icon">🤖</div>
+      <div>
+        <div class="arch-label">Orchestrateur IA — lxc89 (172.16.16.89)</div>
+        <div class="arch-desc">Orchestrator Python (port 5010), Code Context Hub (port 5002), Redis, Nginx, PHP-FPM</div>
+        <div class="arch-tags">
+          <span class="tag tag-purple">Python</span>
+          <span class="tag tag-teal">FastAPI</span>
+          <span class="tag tag-amber">Redis</span>
+          <span class="tag tag-blue">Nginx</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-icon">🖥️</div>
+      <div>
+        <div class="arch-label">DGX Spark GPU (192.168.88.1)</div>
+        <div class="arch-desc">Ollama (Qwen, Llama, Mistral), OpenCode Server, Qdrant (6484 points vectoriels)</div>
+        <div class="arch-tags">
+          <span class="tag tag-rose">GPU NVIDIA GB10</span>
+          <span class="tag tag-green">Qdrant</span>
+          <span class="tag tag-amber">Ollama</span>
+          <span class="tag tag-purple">OpenCode</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="arch-icon">🔗</div>
+      <div>
+        <div class="arch-label">Intégrations Externes</div>
+        <div class="arch-desc">GitLab (webhooks, API), API Anthropic (Claude Opus/Sonnet), API Google (Gemini), Monitoring Grafana+Loki</div>
+        <div class="arch-tags">
+          <span class="tag tag-amber">GitLab</span>
+          <span class="tag tag-purple">Claude API</span>
+          <span class="tag tag-blue">Gemini API</span>
+          <span class="tag tag-green">Grafana</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagram-wrap">
+    <div class="diagram-title">🏗️ Vue d'ensemble — Composants principaux</div>
+    <div class="mermaid">
+graph TB
+    subgraph MASTER["Instance MASTER (lxc89)"]
+        ANG["🌐 Angular 18\nPort 4200"]
+        API["⚙️ Sales API\nPHP 7.4"]
+        KR["📊 KoolReport\nPHP 7.4"]
+        DB[("🗄️ MySQL\n172.16.16.18")]
+        ORCH["🤖 Orchestrateur\nPython :5010"]
+        HUB["🔍 Code Context Hub\n:5002 — 4740 entrées"]
+        REDIS["⚡ Redis\n:6379"]
+    end
+
+    subgraph SPARK["DGX Spark GPU (192.168.88.1)"]
+        OC["OpenCode :4096"]
+        OL["Ollama :11434\nQwen · Llama · Mistral"]
+        QD[("Qdrant :6333\n6484 vecteurs")]
+    end
+
+    subgraph EXT["Externes"]
+        GL["GitLab\ndev.cwb.ovh"]
+        ANTH["API Anthropic\nClaude Opus 4.6"]
+        GEM["Gemini API\nGoogle"]
+    end
+
+    ANG <-->|REST/JWT| API
+    API <--> DB
+    KR <--> DB
+    ORCH <-->|Poll 60s| GL
+    ORCH --> HUB
+    ORCH --> REDIS
+    ORCH -->|Claude CLI| ANTH
+    ORCH -->|HTTP| OC
+    ORCH -->|HTTP| OL
+    ORCH <-->|embeddings| QD
+    GL -->|Webhook| API
+
+    style MASTER fill:#141720,stroke:#252a3a,color:#e2e8f0
+    style SPARK fill:#0d1018,stroke:#252a3a,color:#e2e8f0
+    style EXT fill:#101318,stroke:#252a3a,color:#e2e8f0
+    </div>
+  </div>
+</section>
+
+<!-- ───── CLASSES ───── -->
+<section id="classes">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <h2>Diagramme de Classes</h2>
+  </div>
+
+  <div class="diagram-wrap">
+    <div class="diagram-title">📐 Modèle de données principal — 17 tables</div>
+    <div class="mermaid">
+classDiagram
+    class Project {
+        +int id
+        +int id_client
+        +string description
+        +int id_project_type
+        +int id_project_etat
+        +string label
+        +int disable
+    }
+    class DevApplication {
+        +int id
+        +string name
+        +string description
+        +string repository_url
+        +datetime created_at
+    }
+    class DevPage {
+        +int id
+        +int application_id
+        +int parent_id
+        +string title
+        +string path
+        +int display_order
+    }
+    class DevMap {
+        +int id
+        +int parent_id
+        +int id_app
+        +string text
+        +string href
+        +string icon
+        +int expanded
+        +int article
+    }
+    class DevFeature {
+        +int id
+        +int page_id
+        +string name
+        +string description
+        +enum status
+    }
+    class DevTicket {
+        +int id
+        +int page_id
+        +int application_id
+        +int creator_id
+        +int assignee_id
+        +string title
+        +string description
+        +enum type
+        +enum status
+        +enum priority
+        +datetime created_at
+    }
+    class DevUser {
+        +int id
+        +string username
+        +string email
+        +int role_id
+    }
+    class DevDocumentation {
+        +int id
+        +int page_id
+        +text content
+        +bool generated_by_ai
+    }
+    class DevTimeTracking {
+        +int id
+        +int ticket_id
+        +int user_id
+        +decimal hours
+        +date tracking_date
+    }
+    class DevTest {
+        +int id
+        +int id_ticket
+        +int id_application
+        +enum test_type
+        +string test_name
+        +string test_file_path
+        +enum test_framework
+        +enum last_run_status
+        +decimal coverage_percentage
+        +bool is_critical
+        +bool blocks_deployment
+    }
+    class DevFeaturesTracking {
+        +int id
+        +int id_application
+        +string page_url
+        +string feature_name
+        +enum feature_type
+        +string feature_selector
+        +enum status
+        +enum verification_method
+        +bool is_present
+        +bool is_critical
+    }
+    class JqCalendar {
+        +int Id
+        +string Subject
+        +datetime StartTime
+        +datetime EndTime
+        +int id_user
+        +int id_ticket_glpi
+        +string type
+        +string Color
+    }
+    class DevComment {
+        +int id
+        +int ticket_id
+        +int user_id
+        +text comment
+        +datetime created_at
+    }
+
+    Project "1" --> "N" DevApplication
+    DevApplication "1" --> "N" DevPage
+    DevApplication "1" --> "N" DevMap
+    DevPage "1" --> "N" DevFeature
+    DevPage "1" --> "N" DevTicket
+    DevPage "1" --> "1" DevDocumentation
+    DevUser "1" --> "N" DevTicket : creates
+    DevUser "1" --> "N" DevTicket : assigned
+    DevUser "1" --> "N" DevTimeTracking
+    DevTicket "1" --> "N" DevComment
+    DevTicket "1" --> "N" DevTest
+    DevApplication "1" --> "N" DevTest
+    DevApplication "1" --> "N" DevFeaturesTracking
+    DevUser "1" --> "N" JqCalendar
+    DevTicket "1" --> "N" JqCalendar
+    </div>
+  </div>
+
+  <h3>Relations clés</h3>
+  <div class="grid-2">
+    <div class="card card-accent">
+      <div style="font-weight:600;margin-bottom:10px;">Hiérarchie projet</div>
+      <div style="font-size:13px;color:var(--muted)"><code>Project</code> → <code>DevApplication</code> → <code>DevPage</code> → <code>DevFeature / DevTicket</code></div>
+    </div>
+    <div class="card card-teal">
+      <div style="font-weight:600;margin-bottom:10px;">Nouvelles tables (2025)</div>
+      <div style="font-size:13px;color:var(--muted)"><code>DevTest</code>, <code>DevFeaturesTracking</code>, <code>JqCalendar</code> pour tests auto + planning</div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── SEQUENCE ───── -->
+<section id="sequence">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <h2>Diagrammes de Séquence</h2>
+  </div>
+
+  <h3>3.1 — Pipeline IA : Ticket → Plan → Validation → Exécution</h3>
+  <div class="diagram-wrap">
+    <div class="diagram-title">🔄 Workflow principal de traitement IA</div>
+    <div class="mermaid">
+sequenceDiagram
+    actor DEV as Développeur
+    participant GL as GitLab
+    participant ORCH as Orchestrateur (Python)
+    participant HUB as Code Context Hub :5002
+    participant CLAUDE as Claude Code CLI
+    participant VERIF as Vérificateur
+
+    DEV->>GL: Crée ticket + label ai-claude
+
+    loop Toutes les 60 secondes
+        ORCH->>GL: Poll tickets avec labels ai-*
+    end
+
+    GL-->>ORCH: Ticket détecté
+    ORCH->>HUB: Calcul score complexité
+    HUB-->>ORCH: score=65 → Claude (budget $2)
+
+    ORCH->>GL: Label "en cours"\nCommentaire "Analyse en cours"
+
+    Note over ORCH,CLAUDE: PHASE 1 — PLAN (budget $2 / 10 min)
+    ORCH->>CLAUDE: Dispatch prompt + contexte RAG
+    CLAUDE->>CLAUDE: Lecture du code (read-only)\nAnalyse du problème\nGénération du plan
+
+    CLAUDE-->>ORCH: Plan généré (fichiers, SQL, diagramme)
+    ORCH->>GL: Post plan + label ai-plan
+    GL-->>DEV: Notification plan disponible
+
+    DEV->>GL: Review du plan
+    alt Plan OK
+        DEV->>GL: Ajoute label ai-validation
+    else Plan à modifier
+        DEV->>GL: Commente modifications + ai-validation
+    else Plan rejeté
+        DEV->>GL: Retire labels ai-*
+    end
+
+    Note over ORCH,VERIF: PHASE 2 — EXÉCUTION (budget $5 / 30 min)
+    ORCH->>CLAUDE: Exécute plan approuvé + feedback DEV
+    CLAUDE->>CLAUDE: Modifie code\nCommit + Push\nVérifie build/API
+
+    CLAUDE-->>ORCH: Résultat (exit_code, output)
+    ORCH->>VERIF: Vérification post-fix
+
+    alt Vérification OK
+        VERIF-->>ORCH: passed
+        ORCH->>GL: Commentaire résultat + label "review"
+        GL-->>DEV: Notification résultat
+    else Vérification échouée (max 5 retries)
+        VERIF-->>ORCH: failed
+        ORCH->>CLAUDE: Retry avec feedback
+    end
+    </div>
+  </div>
+
+  <h3>3.2 — Synchronisation Multi-Tenant</h3>
+  <div class="diagram-wrap">
+    <div class="diagram-title">🌐 Instance Cliente → Master</div>
+    <div class="mermaid">
+sequenceDiagram
+    participant CLIENT as Instance Cliente
+    participant API_C as API Cliente
+    participant SYNC as API Master\n/dev/sync
+    participant DB_M as MySQL Master
+    participant DEV as Équipe Dev Master
+
+    CLIENT->>API_C: Crée ticket local
+    API_C->>SYNC: POST /sync/ticket {data, api_key}
+    SYNC->>SYNC: Valide API key
+    SYNC->>DB_M: INSERT dev_tickets
+    SYNC->>DB_M: INSERT dev_sync_tickets\n(remote_id ↔ local_id)
+    DB_M-->>SYNC: ticket_id local
+    SYNC-->>API_C: {success, ticket_id}
+
+    DEV->>DB_M: Met à jour statut ticket
+    DB_M->>SYNC: Trigger mise à jour
+    SYNC->>API_C: POST /sync/receive {ticket_id, updates}
+    API_C->>CLIENT: Mise à jour ticket local
+    </div>
+  </div>
+
+  <h3>3.3 — Vérification automatique des fonctionnalités</h3>
+  <div class="diagram-wrap">
+    <div class="diagram-title">🔍 Feature Tracking — Cron quotidien</div>
+    <div class="mermaid">
+sequenceDiagram
+    participant CRON as Cron quotidien
+    participant API as API /features-tracking
+    participant DB as MySQL
+    participant PW as Playwright
+    participant GL as GitLab
+    participant DEV as Équipe Dev
+
+    CRON->>API: POST /verify-all {id_application, critical_only}
+    API->>DB: SELECT features WHERE verification=automated_dom
+    DB-->>API: Liste features à vérifier
+
+    loop Pour chaque feature
+        API->>PW: Vérifie CSS selector
+        PW-->>API: present/absent
+        alt Feature présente
+            API->>DB: UPDATE is_present=1, last_verified=NOW
+        else Feature absente
+            API->>DB: UPDATE status=broken, missing_since=NOW
+            API->>GL: POST issue (ticket auto)
+            GL->>DEV: Notification
+        end
+    end
+
+    API-->>CRON: {features_verified, present, missing, broken}
+    </div>
+  </div>
+</section>
+
+<!-- ───── USE CASE ───── -->
+<section id="usecase">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <h2>Diagramme de Cas d'Utilisation</h2>
+  </div>
+
+  <div class="diagram-wrap">
+    <div class="diagram-title">👥 Acteurs et cas d'utilisation — Vue globale</div>
+    <div class="mermaid">
+flowchart LR
+    subgraph ACTORS["Acteurs"]
+        DEV["👨‍💻 Développeur"]
+        QA["🧪 Testeur QA"]
+        ADMIN["👑 Admin"]
+        AI["🤖 Agent IA"]
+        GITLAB["🦊 GitLab"]
+    end
+
+    subgraph UC_TICKETS["Gestion Tickets"]
+        UC1["Créer un ticket"]
+        UC2["Assigner un ticket"]
+        UC3["Changer le statut"]
+        UC4["Ajouter commentaire"]
+        UC5["Lier à un commit"]
+    end
+
+    subgraph UC_IA["Agents IA"]
+        UC6["Déclencher analyse IA"]
+        UC7["Valider plan IA"]
+        UC8["Exécuter plan IA"]
+        UC9["Consulter suggestions"]
+    end
+
+    subgraph UC_DOC["Documentation"]
+        UC10["Générer doc (IA)"]
+        UC11["Éditer documentation"]
+        UC12["Consulter pages manquantes"]
+    end
+
+    subgraph UC_PLANNING["Planning"]
+        UC13["Gérer planning perso"]
+        UC14["Visualiser planning équipe"]
+        UC15["Déclarer congé/absence"]
+        UC16["Détecter conflits"]
+    end
+
+    subgraph UC_TESTS["Tests & Tracking"]
+        UC17["Créer test automatisé"]
+        UC18["Exécuter tests"]
+        UC19["Tracker fonctionnalité"]
+        UC20["Recevoir alerte régression"]
+    end
+
+    subgraph UC_MAP["Navigation"]
+        UC21["Parcourir MindMap"]
+        UC22["Ajouter nœud MindMap"]
+        UC23["Visualiser architecture"]
+    end
+
+    DEV --> UC1
+    DEV --> UC2
+    DEV --> UC3
+    DEV --> UC4
+    DEV --> UC6
+    DEV --> UC7
+    DEV --> UC9
+    DEV --> UC10
+    DEV --> UC11
+    DEV --> UC13
+    DEV --> UC17
+    DEV --> UC21
+    DEV --> UC22
+
+    QA --> UC3
+    QA --> UC18
+    QA --> UC20
+
+    ADMIN --> UC2
+    ADMIN --> UC14
+    ADMIN --> UC15
+    ADMIN --> UC16
+
+    AI --> UC8
+    AI --> UC5
+    AI --> UC10
+    AI --> UC19
+    AI --> UC20
+
+    GITLAB --> UC5
+    GITLAB --> UC1
+    </div>
+  </div>
+
+  <h3>Tableau des cas d'utilisation principaux</h3>
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Cas d'utilisation</th><th>Acteurs</th><th>Précondition</th><th>Résultat</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>UC-01</code></td><td>Créer un ticket</td><td>Développeur, GitLab</td><td>Authentifié</td><td>Ticket inséré dans <code>dev_tickets</code></td></tr>
+      <tr><td><code>UC-06</code></td><td>Déclencher analyse IA</td><td>Développeur</td><td>Ticket existant + label <code>ai-claude</code></td><td>Orchestrateur détecte en &lt;60s, plan généré</td></tr>
+      <tr><td><code>UC-07</code></td><td>Valider plan IA</td><td>Développeur</td><td>Phase <code>ai-plan</code> active</td><td>Label <code>ai-validation</code> → exécution déclenchée</td></tr>
+      <tr><td><code>UC-08</code></td><td>Exécuter plan IA</td><td>Agent IA (Claude)</td><td>Validation humaine accordée</td><td>Code modifié, commit poussé, label <code>review</code></td></tr>
+      <tr><td><code>UC-17</code></td><td>Créer test automatisé</td><td>Développeur, QA</td><td>Application existante</td><td>Test enregistré dans <code>dev_tests</code></td></tr>
+      <tr><td><code>UC-18</code></td><td>Exécuter tests</td><td>QA, Cron CI/CD</td><td>Tests enregistrés</td><td>Rapport passed/failed/coverage</td></tr>
+      <tr><td><code>UC-19</code></td><td>Tracker fonctionnalité</td><td>Agent IA, Playwright</td><td>Feature enregistrée</td><td><code>is_present</code> mis à jour</td></tr>
+      <tr><td><code>UC-20</code></td><td>Alerte régression</td><td>Système (Cron)</td><td>Feature <code>broken</code> détectée</td><td>Ticket auto créé + notif équipe</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ───── ACTIVITE ───── -->
+<section id="activite">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <h2>Diagrammes d'Activité</h2>
+  </div>
+
+  <h3>5.1 — Lifecycle des stories & bugs</h3>
+  <div class="diagram-wrap">
+    <div class="diagram-title">📋 Cycle de vie d'un ticket (Story / Bug)</div>
+    <div class="mermaid">
+flowchart TD
+    START([🆕 Ticket créé]) --> PRIO{Priorité\nassignée?}
+    PRIO -->|Non| ASSIGN_PRIO["Qualifier P1/P2/P3\n+ notifier dans channel"]
+    ASSIGN_PRIO --> TODO
+
+    PRIO -->|Oui| TODO["📋 TODO\nAssigné à dev\n(pas encore commencé)"]
+
+    TODO --> BLOCKED{Bloqué?}
+    BLOCKED -->|Oui| BLOCK_ST["🚫 BLOCKED\nAssigné · raison commentée\nVérification régulière"]
+    BLOCK_ST --> BLOCKED
+    BLOCKED -->|Non| DOING["🔄 DOING\nDév. en cours\n(% avancement mis à jour)"]
+
+    DOING --> DONE_DEV{Dev terminé?}
+    DONE_DEV -->|Non| DOING
+    DONE_DEV -->|Oui| TO_TEST["🔬 TO_TEST\nAssigné au testeur\n(0% test)"]
+
+    TO_TEST --> TESTING["🧪 TESTING\nTest en cours\n(% avancement mis à jour)"]
+    TESTING --> TEST_OK{Tests\npassés?}
+
+    TEST_OK -->|Oui| ACCOMPLISHED(["✅ ACCOMPLISHED\nClôture du ticket"])
+    TEST_OK -->|Non| FAILED["❌ FAILED\nRaison commentée\nRetour à DOING"]
+    FAILED --> DOING
+
+    style START fill:#1a1e2b,stroke:#5b7cfa,color:#e2e8f0
+    style ACCOMPLISHED fill:#1a2b1e,stroke:#34d399,color:#e2e8f0
+    style FAILED fill:#2b1a1a,stroke:#f87171,color:#e2e8f0
+    style BLOCK_ST fill:#2b271a,stroke:#fbbf24,color:#e2e8f0
+    </div>
+  </div>
+
+  <h3>5.2 — Workflow de déploiement IA avec validation humaine</h3>
+  <div class="diagram-wrap">
+    <div class="diagram-title">🤖 Activité — Pipeline IA complet</div>
+    <div class="mermaid">
+flowchart TD
+    A(["Début"]) --> B["Dev crée ticket\n+ label ai-claude"]
+    B --> C["Orchestrateur détecte\nen < 60 secondes"]
+    C --> D["Calcul complexité\nCode Context Hub"]
+    D --> E{Score\ncomplexité?}
+
+    E -->|< 20 simple| F1["Ollama local\nqwen2.5-coder:7b\nGratuit"]
+    E -->|≥ 20 complexe| F2["Claude Code CLI\nAPI Anthropic\n~$0.50-5"]
+
+    F1 --> G["PHASE 1 — PLAN\nLecture code (read-only)\nAnalyse + proposition"]
+    F2 --> G
+
+    G --> H["Plan posté sur GitLab\nlabel ai-plan\n⏳ Attente validation humaine"]
+    H --> I{Décision\nhumaine}
+
+    I -->|Validé ✅| J["label ai-validation\nExécution autorisée"]
+    I -->|Modifié 📝| K["Commentaire modifications\n+ ai-validation"]
+    I -->|Rejeté ❌| L(["Fin — Labels retirés"])
+
+    J --> M["PHASE 2 — EXÉCUTION\nModification code\nCommit + Push\nVérification build/API"]
+    K --> M
+
+    M --> N["Vérification post-fix\n(syntaxe PHP, build, API)"]
+    N --> O{Vérification\nOK?}
+
+    O -->|Oui| P["label review\nRésultat posté sur GitLab"]
+    O -->|Non, < 5 retries| Q["Retry avec feedback"]
+    Q --> M
+    O -->|5 échecs| R["Ticket skippé\nNotification équipe"]
+
+    P --> S(["Fin — À vérifier par dev"])
+
+    style A fill:#1a1e2b,stroke:#5b7cfa,color:#e2e8f0
+    style S fill:#1a2b1e,stroke:#34d399,color:#e2e8f0
+    style L fill:#2b1a1a,stroke:#f87171,color:#e2e8f0
+    style R fill:#2b1a1a,stroke:#f87171,color:#e2e8f0
+    </div>
+  </div>
+
+  <h3>5.3 — Activité : Vérification quotidienne des fonctionnalités</h3>
+  <div class="diagram-wrap">
+    <div class="diagram-title">🔍 Feature Tracking — Activité cron</div>
+    <div class="mermaid">
+flowchart TD
+    A(["Cron quotidien"]) --> B["Récupérer features\nà vérifier"]
+    B --> C{Type de\nvérification}
+
+    C -->|automated_dom| D["Playwright vérifie\nCSS selector"]
+    C -->|automated_screenshot| E["Compare screenshots\n(Percy / Chromatic)"]
+    C -->|automated_api| F["Teste endpoint API\n(status, response)"]
+    C -->|manual| G["Notifier développeur\npour vérification manuelle"]
+
+    D --> H{Feature\nprésente?}
+    E --> H
+    F --> H
+    G --> H
+
+    H -->|Oui| I["UPDATE is_present=1\nlast_verified=NOW()"]
+    H -->|Non| J["UPDATE status=broken\nmissing_since=NOW()"]
+    J --> K["Créer ticket auto\nGitLab / GLPI"]
+    K --> L["Notifier équipe dev\n(kchat / GitLab)"]
+
+    I --> END(["Prochain cycle"])
+    L --> END
+
+    style A fill:#1a1e2b,stroke:#5b7cfa,color:#e2e8f0
+    style END fill:#1a1e2b,stroke:#5b7cfa,color:#e2e8f0
+    </div>
+  </div>
+</section>
+
+<!-- ───── BESOINS FONCTIONNELS ───── -->
+<section id="fonctionnel">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <h2>Besoins Fonctionnels</h2>
+  </div>
+
+  <h3>Gestion des Tickets</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id">BF-01</div>
+      <div class="req-body">
+        <div class="req-title">Création et gestion complète des tickets</div>
+        <div class="req-desc">Créer, modifier, assigner, commenter et archiver des tickets de type bug, feature, support, refactor ou documentation. Gestion des priorités P1–P4 et des statuts (open → doing → testing → accomplished/failed).</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-02</div>
+      <div class="req-body">
+        <div class="req-title">Lifecycle unifié des stories et bugs</div>
+        <div class="req-desc">Gérer le cycle de vie standardisé : TODO → DOING → TO_TEST → TESTING → ACCOMPLISHED ou FAILED. Seul le développeur peut modifier les statuts dev ; seul le testeur peut modifier les statuts test. Blocage possible avec commentaire obligatoire.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-03</div>
+      <div class="req-body">
+        <div class="req-title">Suivi du temps par ticket</div>
+        <div class="req-desc">Enregistrer les heures passées sur chaque ticket dans <code>dev_time_trackings</code>, avec vue analytique par développeur et par application.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Navigation & MindMap</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id">BF-04</div>
+      <div class="req-body">
+        <div class="req-title">Navigation MindMap interactive</div>
+        <div class="req-desc">Visualiser l'arborescence de chaque application sous forme de carte mentale (MindElixir). Ajouter, modifier, supprimer des nœuds avec synchronisation temps réel vers la base de données. Menu contextuel : Documentation, Créer ticket, Demander à l'IA.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-05</div>
+      <div class="req-body">
+        <div class="req-title">Navigation synchronisée MindMap ↔ KoolReport</div>
+        <div class="req-desc">Synchroniser la sélection d'un nœud dans la MindMap avec l'affichage des tables de gestion dans KoolReport et vice-versa.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Agents IA</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id">BF-06</div>
+      <div class="req-body">
+        <div class="req-title">Pipeline IA Plan → Validation → Exécution</div>
+        <div class="req-desc">Détecter les tickets labellisés (<code>ai-claude</code>, <code>ai-opencode</code>, <code>ai-gemini</code>) en moins de 60s. Générer un plan en lecture seule (phase 1), attendre validation humaine, puis exécuter les modifications (phase 2). Deux budgets distincts : $2/10min (plan) et $5/30min (exécution).</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-07</div>
+      <div class="req-body">
+        <div class="req-title">Routing intelligent des LLMs</div>
+        <div class="req-desc">Calculer un score de complexité via le Code Context Hub et router automatiquement vers le modèle le plus approprié : Ollama local (gratuit) pour les tâches simples, Claude Opus/GLM pour les tâches complexes, selon la stratégie de coût (abonnements illimités > LLMs locaux > API pay-per-use).</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-08</div>
+      <div class="req-body">
+        <div class="req-title">Mémoire vectorielle (RAG)</div>
+        <div class="req-desc">Indexer documentation, commits, tickets résolus et schémas DB dans Qdrant. Enrichir les prompts des agents IA avec le contexte pertinent (top_k=8, cosine similarity ≥ 0.25). Collections : orchestrator_docs, wikijs_rag, db_schemas, decisions, tickets.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-09</div>
+      <div class="req-body">
+        <div class="req-title">Dashboard de monitoring IA</div>
+        <div class="req-desc">Afficher en temps réel l'état des agents, l'historique des exécutions, les stats par agent et les métriques quotidiennes sur 30 jours. Chat RAG intégré pour interroger la base de connaissances.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Intégration GitLab</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id">BF-10</div>
+      <div class="req-body">
+        <div class="req-title">Webhooks GitLab bidirectionnels</div>
+        <div class="req-desc">Traiter les événements Push (lier commits aux tickets via <code>#id</code>), Merge Request (résoudre ticket automatiquement au merge), Pipeline (créer ticket si pipeline échoue), Issue (synchroniser issues GitLab).</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-11</div>
+      <div class="req-body">
+        <div class="req-title">Synchronisation automatique des commits</div>
+        <div class="req-desc">Indexer les commits humains dans Qdrant (<code>orchestrator_decisions</code>) toutes les heures via cron, pour enrichir la mémoire IA des décisions techniques prises par l'équipe.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Multi-Tenant & Documentation</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id">BF-12</div>
+      <div class="req-body">
+        <div class="req-title">Architecture Multi-Tenant Master/Clients</div>
+        <div class="req-desc">L'instance MASTER collecte les tickets de toutes les instances clientes via API REST sécurisée (API key). Synchronisation bidirectionnelle : le client envoie les tickets vers le master, le master envoie les mises à jour vers les clients.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-13</div>
+      <div class="req-body">
+        <div class="req-title">Documentation auto-générée par IA</div>
+        <div class="req-desc">Générer et mettre à jour automatiquement la documentation de chaque page à partir du code source. Détecter les pages sans documentation et suggérer un contenu. Éditeur Quill intégré pour édition manuelle.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-14</div>
+      <div class="req-body">
+        <div class="req-title">Tests automatisés et prévention des régressions</div>
+        <div class="req-desc">Enregistrer des tests (unitaire, intégration, e2e, regression, performance, security) avec frameworks PHPUnit, Jest, Jasmine, Playwright, Cypress. Bloquer les déploiements si un test critique échoue.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-15</div>
+      <div class="req-body">
+        <div class="req-title">Tracking des fonctionnalités par page</div>
+        <div class="req-desc">Surveiller la présence des fonctionnalités critiques (boutons, menus, formulaires, API) via CSS selectors (Playwright), comparaison screenshots ou appels API. Créer automatiquement un ticket si une fonctionnalité disparaît.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id">BF-16</div>
+      <div class="req-body">
+        <div class="req-title">Planning développeurs (personnel + équipe)</div>
+        <div class="req-desc">Vue calendrier personnelle (créer/modifier événements, déclarer congés, lier aux tickets). Vue équipe (multi-développeurs, détection conflits, charge de travail, vue Gantt, drag &amp; drop). Recherche automatique du développeur disponible selon compétences requises.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+</section>
+
+<!-- ───── BESOINS NON FONCTIONNELS ───── -->
+<section id="nonfonctionnel">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <h2>Besoins Non-Fonctionnels</h2>
+  </div>
+
+  <h3>Performance</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id nf">BNF-01</div>
+      <div class="req-body">
+        <div class="req-title">Délai de détection des tickets IA</div>
+        <div class="req-desc">L'orchestrateur doit détecter un ticket labellisé en moins de 60 secondes (intervalle de polling configurable). Temps de réponse du Chat RAG : ~3 secondes (Ollama GPU).</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-02</div>
+      <div class="req-body">
+        <div class="req-title">Limites de budget IA</div>
+        <div class="req-desc">Budget quotidien maximal : $50/jour avec alerte à $20. Budget par ticket : $2/10min (phase plan), $5/30min (phase exécution). Maximum 2 retries par ticket, skip après 5 échecs consécutifs.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-03</div>
+      <div class="req-body">
+        <div class="req-title">Index sémantique régénéré en temps raisonnable</div>
+        <div class="req-desc">Le Code Context Hub indexe 4740 entrées et doit être régénéré toutes les heures via cron sans impacter les performances de l'API. Temps de recherche vectorielle &lt; 500ms.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Sécurité</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id nf">BNF-04</div>
+      <div class="req-body">
+        <div class="req-title">Authentification JWT pour l'API</div>
+        <div class="req-desc">Toutes les requêtes vers <code>/Api/sales/dev/*</code> doivent être authentifiées via JWT. Les instances clientes utilisent des API keys uniques pour la synchronisation multi-tenant.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-05</div>
+      <div class="req-body">
+        <div class="req-title">Contrôle des permissions des agents IA</div>
+        <div class="req-desc">Les agents IA s'exécutent sous l'utilisateur système <code>agent-ia</code> (uid 1000) en mode <code>bypassPermissions</code>. Chaque agent possède un compte GitLab distinct (<code>@agent-maestro</code>, <code>@agent-coder</code>…) pour traçabilité complète des actions.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-06</div>
+      <div class="req-body">
+        <div class="req-title">Soft delete obligatoire</div>
+        <div class="req-desc">Aucune suppression physique : toutes les tables utilisent un champ <code>disable</code> pour les suppressions logiques, garantissant l'auditabilité et la restauration des données.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-07</div>
+      <div class="req-body">
+        <div class="req-title">Validation du webhook GitLab</div>
+        <div class="req-desc">Vérifier le token <code>X-GitLab-Token</code> sur chaque webhook entrant. Rejeter avec HTTP 401 toute requête non authentifiée.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+  </ul>
+
+  <h3>Disponibilité & Maintenabilité</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id nf">BNF-08</div>
+      <div class="req-body">
+        <div class="req-title">Services supervisés par systemd</div>
+        <div class="req-desc">Tous les services critiques (orchestrateur, code context hub, Angular, Nginx, PHP-FPM) sont gérés par systemd avec redémarrage automatique. Monitoring via Grafana + Loki + Promtail.</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-09</div>
+      <div class="req-body">
+        <div class="req-title">Traçabilité complète des actions IA</div>
+        <div class="req-desc">Stocker dans SQLite (<code>orchestrator.db</code>) l'historique de toutes les exécutions (issue_id, phase, status, agent, started_at, durée, coût). Accessible via API <code>/api/history</code> et interface dashboard.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-10</div>
+      <div class="req-body">
+        <div class="req-title">Documentation API complète</div>
+        <div class="req-desc">Chaque endpoint API expose des exemples de requête/réponse JSON documentés. L'architecture de fichiers suit une convention stricte (<code>/Api/sales/dev/[module].php</code>).</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Scalabilité & Extensibilité</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id nf">BNF-11</div>
+      <div class="req-body">
+        <div class="req-title">Architecture multi-tenant extensible</div>
+        <div class="req-desc">Le système doit supporter l'ajout d'instances clientes sans modification du master. L'API de synchronisation est conçue pour être générique et réutilisable par tous les modules (TASKS, NETWORK, ORES…).</div>
+      </div>
+      <span class="req-prio prio-high">HAUTE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-12</div>
+      <div class="req-body">
+        <div class="req-title">Catalogue LLM extensible</div>
+        <div class="req-desc">L'orchestrateur doit pouvoir intégrer de nouveaux modèles LLM (abonnements, locaux, API) sans refonte architecturale. La table <code>ia_providers / ia_models</code> (à créer) centralisera les configurations.</div>
+      </div>
+      <span class="req-prio prio-low">BASSE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-13</div>
+      <div class="req-body">
+        <div class="req-title">Concurrence des agents configurable</div>
+        <div class="req-desc">Claude Code : séquentiel (1 ticket/cycle). OpenCode/GLM-4-Plus : jusqu'à 20 tâches concurrentes. La concurrence doit être configurable par agent sans redémarrage du service.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Compatibilité & Internationalisation</h3>
+  <ul class="req-list">
+    <li class="req-item">
+      <div class="req-id nf">BNF-14</div>
+      <div class="req-body">
+        <div class="req-title">Support multilingue de la MindMap</div>
+        <div class="req-desc">Les textes de la carte mentale doivent supporter l'internationalisation via la table <code>dev_map_i18n</code> (FR, EN, NL…).</div>
+      </div>
+      <span class="req-prio prio-low">BASSE</span>
+    </li>
+    <li class="req-item">
+      <div class="req-id nf">BNF-15</div>
+      <div class="req-body">
+        <div class="req-title">Encodage UTF-8 et charset unifié</div>
+        <div class="req-desc">Toutes les tables MySQL doivent utiliser <code>utf8mb4</code> avec index FULLTEXT pour la recherche de texte. Les nouvelles tables (<code>dev_tests</code>, <code>dev_features_tracking</code>) appliquent déjà ce standard.</div>
+      </div>
+      <span class="req-prio prio-med">MOYENNE</span>
+    </li>
+  </ul>
+
+  <h3>Synthèse</h3>
+  <div class="grid-3" style="margin-top:24px">
+    <div class="card card-rose">
+      <div style="font-size:1.8rem;margin-bottom:8px;">16</div>
+      <div style="font-weight:600;">Besoins fonctionnels</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px;">BF-01 à BF-16</div>
+    </div>
+    <div class="card card-teal">
+      <div style="font-size:1.8rem;margin-bottom:8px;">15</div>
+      <div style="font-weight:600;">Besoins non-fonctionnels</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px;">BNF-01 à BNF-15</div>
+    </div>
+    <div class="card card-amber">
+      <div style="font-size:1.8rem;margin-bottom:8px;">4</div>
+      <div style="font-weight:600;">Diagrammes UML</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px;">Classes · Séquence · UC · Activité</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Généré à partir de dev.wiki (GitLab) — Plateforme de Gestion de Développement — Analyse Avril 2026
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#1a1e2b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#5b7cfa',
+      lineColor: '#5b7cfa',
+      secondaryColor: '#141720',
+      tertiaryColor: '#0d0f14',
+      background: '#0d0f14',
+      mainBkg: '#1a1e2b',
+      nodeBorder: '#252a3a',
+      clusterBkg: '#141720',
+      titleColor: '#e2e8f0',
+      edgeLabelBackground: '#1a1e2b',
+      actorBorder: '#5b7cfa',
+      actorBkg: '#1a1e2b',
+      actorTextColor: '#e2e8f0',
+      actorLineColor: '#5b7cfa',
+      signalColor: '#a78bfa',
+      signalTextColor: '#e2e8f0',
+      labelBoxBkgColor: '#1a1e2b',
+      labelBoxBorderColor: '#5b7cfa',
+      labelTextColor: '#e2e8f0',
+      loopTextColor: '#e2e8f0',
+      noteBorderColor: '#fbbf24',
+      noteBkgColor: '#2b271a',
+      noteTextColor: '#e2e8f0',
+      classFill: '#1a1e2b',
+      classText: '#e2e8f0',
+      fillType0: '#1a1e2b',
+      fillType1: '#141720',
+    },
+    flowchart: { curve: 'basis', padding: 20 },
+    sequence: { actorMargin: 80, useMaxWidth: true },
+    classDiagram: { useMaxWidth: true }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentation API REST</title>
+</head>
+<body>
+    <h1>Documentation API REST - Système de Gestion</h1>
+    
+    <h2>Authentification</h2>
+    <p>Toutes les requêtes API nécessitent une authentification via token JWT.</p>
+    
+    <h3>Obtenir un token</h3>
+    <pre>
+POST /api/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "mot_de_passe"
+}
+    </pre>
+    
+    <p>Réponse:</p>
+    <pre>
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expiresIn": 3600
+}
+    </pre>
+    
+    <h2>Endpoints Utilisateurs</h2>
+    
+    <h3>GET /api/users</h3>
+    <p>Récupère la liste de tous les utilisateurs</p>
+    <p>Headers: Authorization: Bearer {token}</p>
+    <p>Paramètres optionnels:</p>
+    <ul>
+        <li>page: numéro de page (défaut: 1)</li>
+        <li>limit: nombre d'éléments par page (défaut: 10)</li>
+        <li>search: recherche par nom ou email</li>
+    </ul>
+    
+    <h3>POST /api/users</h3>
+    <p>Crée un nouvel utilisateur</p>
+    <pre>
+{
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "SecurePass123!",
+    "role": "USER"
+}
+    </pre>
+    
+    <h3>PUT /api/users/{id}</h3>
+    <p>Met à jour un utilisateur existant</p>
+    
+    <h3>DELETE /api/users/{id}</h3>
+    <p>Supprime un utilisateur (soft delete)</p>
+    
+    <h2>Endpoints Documents</h2>
+    
+    <h3>GET /api/documents</h3>
+    <p>Liste tous les documents accessibles par l'utilisateur</p>
+    <p>Filtres disponibles:</p>
+    <ul>
+        <li>type: PDF, WORD, EXCEL</li>
+        <li>createdAfter: date ISO 8601</li>
+        <li>createdBefore: date ISO 8601</li>
+    </ul>
+    
+    <h3>POST /api/documents/upload</h3>
+    <p>Upload un nouveau document</p>
+    <p>Content-Type: multipart/form-data</p>
+    <p>Taille maximale: 10 MB</p>
+    
+    <h2>Codes d'erreur</h2>
+    <table border="1">
+        <tr>
+            <th>Code</th>
+            <th>Signification</th>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>Succès</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>Requête invalide</td>
+        </tr>
+        <tr>
+            <td>401</td>
+            <td>Non authentifié</td>
+        </tr>
+        <tr>
+            <td>403</td>
+            <td>Accès interdit</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Ressource non trouvée</td>
+        </tr>
+        <tr>
+            <td>500</td>
+            <td>Erreur serveur</td>
+        </tr>
+    </table>
+    
+    <h2>Rate Limiting</h2>
+    <p>L'API est limitée à 100 requêtes par minute par token.</p>
+    <p>Headers de réponse:</p>
+    <ul>
+        <li>X-RateLimit-Limit: limite maximale</li>
+        <li>X-RateLimit-Remaining: requêtes restantes</li>
+        <li>X-RateLimit-Reset: timestamp de reset</li>
+    </ul>
+    
+    <h2>Exemples avec curl</h2>
+    
+    <h3>Login</h3>
+    <pre>
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"secret"}'
+    </pre>
+    
+    <h3>Lister les utilisateurs</h3>
+    <pre>
+curl -X GET http://localhost:8080/api/users \
+  -H "Authorization: Bearer YOUR_TOKEN"
+    </pre>
+    
+    <h2>Support</h2>
+    <p>Pour toute question, contactez: api-support@example.com</p>
+</body>
+</html>

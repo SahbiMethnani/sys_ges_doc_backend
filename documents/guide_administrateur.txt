@@ -1,0 +1,188 @@
+GUIDE ADMINISTRATEUR - GESTION DE L'ESPACE ENTREPRISE
+Système de Gestion Documentaire - Plan Entreprise
+
+=================================================================
+1. ACCÈS À LA CONSOLE D'ADMINISTRATION
+=================================================================
+
+L'interface d'administration est accessible via :
+URL : https://app.example.com/admin
+Accès réservé aux utilisateurs avec le rôle "Administrateur"
+
+Pour obtenir les droits administrateur :
+Contactez le propriétaire du compte ou support@example.com
+
+=================================================================
+2. GESTION DES UTILISATEURS
+=================================================================
+
+2.1 Inviter des utilisateurs
+-----------------------------
+1. Allez dans Admin > Utilisateurs > Inviter
+2. Entrez l'email (ou importez un CSV pour les invitations en masse)
+3. Choisissez le rôle : Administrateur, Manager, Utilisateur, Invité
+4. L'utilisateur reçoit un email d'invitation valable 7 jours
+
+Import CSV (invitation en masse) :
+Format du fichier : email,prenom,nom,role
+Exemple :
+  jean.dupont@entreprise.com,Jean,Dupont,user
+  marie.martin@entreprise.com,Marie,Martin,manager
+
+2.2 Modifier les rôles
+-----------------------
+1. Allez dans Admin > Utilisateurs
+2. Cliquez sur l'utilisateur concerné
+3. Modifiez le rôle dans le menu déroulant
+4. Confirmez la modification
+
+2.3 Désactiver un compte
+-------------------------
+Un compte désactivé ne peut plus se connecter mais ses données sont conservées.
+1. Admin > Utilisateurs > Sélectionner l'utilisateur
+2. Cliquez sur "Désactiver le compte"
+3. Confirmez
+
+Pour réactiver : même procédure, bouton "Réactiver"
+
+2.4 Groupes d'utilisateurs
+---------------------------
+Les groupes facilitent la gestion des permissions sur les dossiers.
+1. Admin > Groupes > Créer un groupe
+2. Nommez le groupe (ex: "Équipe Marketing")
+3. Ajoutez les membres
+4. Assignez les permissions sur les dossiers
+
+=================================================================
+3. GESTION DU STOCKAGE
+=================================================================
+
+3.1 Quotas par utilisateur
+---------------------------
+Définir un quota individuel :
+1. Admin > Utilisateurs > Sélectionner l'utilisateur
+2. Section "Stockage" > Définir le quota
+3. Exemples : 5 Go, 20 Go, illimité
+
+Quota global : défini par votre plan (illimité pour Entreprise)
+
+3.2 Rapport d'utilisation
+--------------------------
+Admin > Stockage > Rapport d'utilisation
+Informations disponibles :
+- Espace total utilisé vs disponible
+- Top 10 des utilisateurs par usage
+- Répartition par type de fichier
+- Évolution sur les 12 derniers mois
+
+3.3 Nettoyage automatique
+--------------------------
+Configurez des règles de nettoyage automatique :
+Admin > Paramètres > Rétention des données
+Options :
+- Vider automatiquement la corbeille après X jours
+- Archiver les fichiers non consultés depuis X mois
+- Supprimer les anciennes versions après X révisions
+
+=================================================================
+4. SÉCURITÉ ET CONFORMITÉ
+=================================================================
+
+4.1 Politiques de mot de passe
+--------------------------------
+Admin > Sécurité > Politique de mot de passe
+Paramètres configurables :
+- Longueur minimale (recommandé : 12 caractères)
+- Complexité requise (majuscules, chiffres, caractères spéciaux)
+- Durée de validité (forcer le renouvellement tous les X jours)
+- Historique (empêcher la réutilisation des X derniers mots de passe)
+
+4.2 Authentification à deux facteurs
+--------------------------------------
+Admin > Sécurité > Authentification
+Options :
+- Rendre la 2FA obligatoire pour tous les utilisateurs
+- Rendre la 2FA obligatoire pour les administrateurs uniquement
+- Permettre les exceptions pour certains utilisateurs
+
+4.3 Restrictions d'accès IP
+-----------------------------
+Limitez l'accès à certaines plages d'adresses IP :
+Admin > Sécurité > Restrictions IP
+Exemples :
+- Autoriser uniquement le réseau du bureau (192.168.1.0/24)
+- Bloquer l'accès depuis des pays spécifiques
+
+4.4 Journal d'audit
+--------------------
+Admin > Audit > Journal des activités
+Filtres disponibles :
+- Par utilisateur
+- Par type d'action (connexion, upload, partage, suppression)
+- Par période
+- Par adresse IP
+
+Export du journal : CSV ou JSON, pour les 12 derniers mois
+
+4.5 Conformité RGPD
+--------------------
+Admin > Conformité
+Outils disponibles :
+- Rapport sur les données d'un utilisateur (droit d'accès)
+- Suppression complète des données d'un utilisateur (droit à l'oubli)
+- Export des données au format standard (portabilité)
+- Registre des traitements
+
+=================================================================
+5. CONFIGURATION DE L'ESPACE ENTREPRISE
+=================================================================
+
+5.1 Personnalisation
+---------------------
+Admin > Apparence
+- Logo de l'entreprise (formats : PNG, SVG, max 2 Mo)
+- Couleur principale de l'interface
+- URL personnalisée : votreentreprise.example.com
+- Email d'expéditeur personnalisé pour les notifications
+
+5.2 Intégrations
+-----------------
+Admin > Intégrations > Activer
+Disponibles :
+- Active Directory / LDAP pour la synchronisation des utilisateurs
+- SAML 2.0 pour le SSO (Single Sign-On)
+- Microsoft 365 et Google Workspace
+- API webhooks pour vos systèmes internes
+
+5.3 Configuration SAML (SSO)
+-----------------------------
+1. Admin > Intégrations > SSO > SAML 2.0
+2. Téléchargez les métadonnées de notre fournisseur de services
+3. Configurez dans votre Identity Provider (Okta, Azure AD, etc.)
+4. Entrez l'URL SSO et le certificat de signature
+5. Testez la connexion avant d'activer
+
+5.4 Synchronisation Active Directory
+--------------------------------------
+1. Admin > Intégrations > Active Directory
+2. Entrez les paramètres LDAP (serveur, port, DN de base)
+3. Entrez les credentials de connexion LDAP
+4. Configurez le mapping des attributs
+5. Planifiez la synchronisation (toutes les heures recommandé)
+
+=================================================================
+6. SUPPORT ENTREPRISE
+=================================================================
+
+Support dédié 24/7 : enterprise@example.com
+Téléphone prioritaire : +33 1 23 45 67 00
+Gestionnaire de compte dédié : votre contact habituel
+SLA garanti : 4 heures pour les incidents critiques
+
+Formation et onboarding :
+- Sessions de formation en ligne incluses (jusqu'à 5h/an)
+- Documentation personnalisée disponible sur demande
+- Webinaires mensuels sur les nouvelles fonctionnalités
+
+Portail client : clients.example.com
+Accédez à vos contrats, factures, et rapports d'utilisation

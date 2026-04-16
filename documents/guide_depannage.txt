@@ -1,0 +1,165 @@
+GUIDE DE DÉPANNAGE - RÉSOLUTION DES PROBLÈMES COURANTS
+Système de Gestion Documentaire
+
+=================================================================
+1. PROBLÈMES DE CONNEXION
+=================================================================
+
+PROBLÈME : Impossible de se connecter - "Email ou mot de passe incorrect"
+CAUSE : Identifiants incorrects ou compte inexistant
+SOLUTION :
+1. Vérifiez la saisie de votre email (pas d'espace, bonne orthographe)
+2. Vérifiez que le verrouillage des majuscules (Caps Lock) est désactivé
+3. Utilisez "Mot de passe oublié" pour réinitialiser
+4. Si le problème persiste, contactez votre administrateur
+
+PROBLÈME : "Compte temporairement bloqué"
+CAUSE : Trop de tentatives de connexion échouées (5 max)
+SOLUTION :
+1. Attendez 30 minutes que le blocage expire automatiquement
+2. Ou utilisez "Mot de passe oublié" pour réinitialiser immédiatement
+3. Si vous n'avez pas accès à votre email, contactez support@example.com
+
+PROBLÈME : Email de réinitialisation non reçu
+CAUSE : Email en spam ou délai de livraison
+SOLUTION :
+1. Vérifiez votre dossier spam/courriers indésirables
+2. Attendez 5 minutes (délai normal de livraison)
+3. Vérifiez que l'email saisi est correct
+4. Ajoutez noreply@example.com à vos contacts autorisés
+5. Contactez le support si le problème persiste
+
+PROBLÈME : Code 2FA invalide
+CAUSE : Désynchronisation de l'horloge de votre appareil
+SOLUTION :
+1. Vérifiez que l'heure de votre téléphone est synchronisée automatiquement
+2. Sur Android : Paramètres > Système > Date et heure > Heure automatique
+3. Sur iOS : Réglages > Général > Date et heure > Réglage automatique
+4. Si vous avez perdu accès à votre application 2FA, contactez le support avec votre identité
+
+=================================================================
+2. PROBLÈMES D'UPLOAD
+=================================================================
+
+PROBLÈME : "Fichier trop volumineux"
+CAUSE : Dépassement de la limite selon votre plan
+SOLUTION :
+1. Vérifiez votre plan actuel dans Paramètres > Abonnement
+   - Gratuit : max 10 Mo par fichier
+   - Pro : max 100 Mo par fichier
+   - Entreprise : max 500 Mo par fichier
+2. Compressez le fichier avant l'upload
+3. Passez à un plan supérieur si nécessaire
+
+PROBLÈME : "Format de fichier non supporté"
+CAUSE : Extension de fichier non acceptée
+SOLUTION :
+1. Formats acceptés : PDF, DOCX, XLSX, PPTX, TXT, HTML, JPG, PNG, GIF, RAW
+2. Convertissez votre fichier au format PDF (recommandé)
+3. Pour les formats spéciaux, contactez le support
+
+PROBLÈME : Upload qui reste bloqué à 0% ou s'interrompt
+CAUSE : Connexion réseau instable ou timeout
+SOLUTION :
+1. Vérifiez votre connexion internet
+2. Essayez avec un réseau différent (passez du WiFi au câble)
+3. Désactivez temporairement votre VPN s'il est actif
+4. Videz le cache du navigateur (Ctrl+Shift+Delete)
+5. Essayez avec un autre navigateur (Chrome, Firefox, Edge)
+6. Pour les fichiers volumineux, utilisez notre application de bureau
+
+PROBLÈME : Fichier uploadé mais non visible
+CAUSE : Délai d'indexation pour les gros fichiers
+SOLUTION :
+1. Rafraîchissez la page (F5)
+2. Attendez 2-3 minutes pour les fichiers de plus de 50 Mo
+3. Vérifiez que l'upload s'est terminé (indicateur à 100%)
+
+=================================================================
+3. PROBLÈMES D'AFFICHAGE
+=================================================================
+
+PROBLÈME : Documents qui ne s'affichent pas en prévisualisation
+CAUSE : Format non supporté par le prévisualiseur ou fichier corrompu
+SOLUTION :
+1. Téléchargez le fichier et ouvrez-le localement
+2. Essayez avec un autre navigateur
+3. Vérifiez que le fichier n'est pas protégé par mot de passe
+4. Pour les PDFs : assurez-vous qu'ils ne sont pas chiffrés
+
+PROBLÈME : Interface lente ou qui ne répond pas
+CAUSE : Cache navigateur plein ou extensions conflictuelles
+SOLUTION :
+1. Videz le cache : Ctrl+Shift+Delete > Sélectionnez "Images et fichiers en cache"
+2. Désactivez les extensions du navigateur temporairement
+3. Essayez en navigation privée
+4. Vérifiez que votre navigateur est à jour
+Navigateurs supportés : Chrome 100+, Firefox 100+, Safari 15+, Edge 100+
+
+=================================================================
+4. PROBLÈMES DE PARTAGE
+=================================================================
+
+PROBLÈME : Le destinataire ne reçoit pas l'email de partage
+CAUSE : Email en spam ou adresse incorrecte
+SOLUTION :
+1. Vérifiez l'orthographe de l'email du destinataire
+2. Demandez au destinataire de vérifier ses spams
+3. Utilisez le lien de partage direct comme alternative
+
+PROBLÈME : "Vous n'avez pas les droits pour partager ce document"
+CAUSE : Vous n'êtes pas propriétaire et le partage est restreint
+SOLUTION :
+1. Contactez le propriétaire du document pour obtenir les droits de partage
+2. Le propriétaire peut modifier les permissions dans les détails du fichier
+
+PROBLÈME : Lien de partage expiré
+CAUSE : Le lien a dépassé sa date d'expiration (7 jours par défaut)
+SOLUTION :
+1. Le propriétaire doit générer un nouveau lien
+2. Pour éviter l'expiration, le propriétaire peut définir une durée plus longue
+
+=================================================================
+5. PROBLÈMES DE STOCKAGE
+=================================================================
+
+PROBLÈME : "Quota de stockage dépassé"
+CAUSE : Espace de stockage du plan épuisé
+SOLUTION :
+1. Vérifiez votre utilisation dans Paramètres > Stockage
+2. Supprimez les fichiers inutiles (y compris la corbeille)
+3. Passez à un plan supérieur
+Plans disponibles :
+- Gratuit : 5 Go
+- Pro : 50 Go (9,99€/mois)
+- Entreprise : illimité (tarif sur devis)
+
+PROBLÈME : Fichiers supprimés mais espace non libéré
+CAUSE : Fichiers dans la corbeille comptent toujours
+SOLUTION :
+1. Allez dans la Corbeille
+2. Sélectionnez tout (Ctrl+A)
+3. Cliquez "Vider la corbeille"
+L'espace sera libéré immédiatement.
+
+=================================================================
+6. CONTACTER LE SUPPORT
+=================================================================
+
+Avant de contacter le support, vérifiez :
+1. La page de statut : status.example.com (incidents en cours)
+2. La FAQ : help.example.com/faq
+3. Ce guide de dépannage
+
+Comment nous contacter :
+- Chat en direct : disponible sur app.example.com (lun-ven, 9h-18h)
+- Email : support@example.com (réponse sous 24h ouvrées)
+- Téléphone : +33 1 23 45 67 89 (Pro et Entreprise uniquement, lun-ven 9h-18h)
+
+Informations à fournir au support :
+1. Description précise du problème
+2. Étapes pour reproduire l'erreur
+3. Captures d'écran si possible
+4. Navigateur et version utilisés
+5. Système d'exploitation
+6. Votre identifiant de compte (email)

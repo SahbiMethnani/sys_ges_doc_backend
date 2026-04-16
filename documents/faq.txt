@@ -1,0 +1,80 @@
+FAQ - Questions Fréquemment Posées
+
+=== COMPTE ET AUTHENTIFICATION ===
+
+Q: Comment créer un compte ?
+R: Rendez-vous sur la page d'inscription, renseignez votre email, un mot de passe sécurisé (minimum 8 caractères, une majuscule, un chiffre) et validez votre email via le lien reçu.
+
+Q: Comment réinitialiser mon mot de passe ?
+R: Cliquez sur "Mot de passe oublié" sur la page de connexion. Vous recevrez un email avec un lien de réinitialisation valable 24 heures.
+
+Q: Comment modifier mon mot de passe ?
+R: Allez dans Paramètres > Sécurité > Changer le mot de passe. Saisissez votre ancien mot de passe puis le nouveau deux fois.
+
+Q: Comment activer l'authentification à deux facteurs (2FA) ?
+R: Allez dans Paramètres > Sécurité > Authentification à deux facteurs. Scannez le QR code avec une application comme Google Authenticator ou Authy.
+
+Q: Mon compte est bloqué, que faire ?
+R: Après 5 tentatives échouées, le compte est bloqué 30 minutes. Utilisez "Mot de passe oublié" ou contactez le support à support@example.com.
+
+Q: Comment supprimer mon compte ?
+R: Allez dans Paramètres > Compte > Supprimer mon compte. La suppression est irréversible et toutes vos données seront effacées sous 30 jours.
+
+=== ABONNEMENTS ET FACTURATION ===
+
+Q: Quels sont les plans disponibles ?
+R: Nous proposons trois plans : Gratuit (5 Go, 3 utilisateurs), Pro (50 Go, 10 utilisateurs, 9,99€/mois) et Entreprise (illimité, utilisateurs illimités, tarif sur devis).
+
+Q: Comment passer à un plan supérieur ?
+R: Allez dans Paramètres > Abonnement > Mettre à niveau. Le changement est effectif immédiatement et le montant est calculé au prorata.
+
+Q: Comment annuler mon abonnement ?
+R: Allez dans Paramètres > Abonnement > Annuler. Vous conservez l'accès jusqu'à la fin de la période payée.
+
+Q: Comment obtenir une facture ?
+R: Toutes vos factures sont disponibles dans Paramètres > Facturation > Historique des paiements au format PDF.
+
+Q: Proposez-vous des remises pour les associations ou étudiants ?
+R: Oui, nous offrons 50% de réduction sur le plan Pro pour les associations à but non lucratif et les étudiants sur présentation d'un justificatif.
+
+=== DOCUMENTS ET FICHIERS ===
+
+Q: Quels formats de fichiers sont supportés ?
+R: PDF, Word (.docx), Excel (.xlsx), PowerPoint (.pptx), images (JPG, PNG, GIF), texte (.txt), HTML et fichiers RAW.
+
+Q: Quelle est la taille maximale d'un fichier ?
+R: 10 Mo pour le plan Gratuit, 100 Mo pour le plan Pro, 500 Mo pour le plan Entreprise.
+
+Q: Comment exporter mes données ?
+R: Allez dans Paramètres > Export de données. Un fichier ZIP contenant tous vos documents sera généré et envoyé à votre email dans les 24 heures.
+
+Q: Comment partager un document avec un utilisateur externe ?
+R: Ouvrez le document, cliquez sur "Partager", entrez l'email du destinataire et choisissez les permissions (lecture seule ou modification).
+
+Q: Les fichiers supprimés sont-ils récupérables ?
+R: Oui, les fichiers supprimés sont conservés dans la corbeille pendant 30 jours avant suppression définitive.
+
+Q: Comment organiser mes documents en dossiers ?
+R: Cliquez sur "Nouveau dossier" dans la barre latérale, nommez-le et glissez-déposez vos documents dedans.
+
+=== API ET INTÉGRATIONS ===
+
+Q: Puis-je utiliser l'API ?
+R: Oui, les utilisateurs Pro et Entreprise ont accès à l'API REST. Consultez la documentation API sur docs.example.com/api.
+
+Q: Comment obtenir une clé API ?
+R: Allez dans Paramètres > API > Générer une clé. Chaque clé est unique et doit rester confidentielle.
+
+Q: L'application est-elle disponible sur mobile ?
+R: Oui, l'application est disponible sur iOS (App Store) et Android (Google Play). Elle est également responsive sur navigateur mobile.
+
+=== SÉCURITÉ ET CONFIDENTIALITÉ ===
+
+Q: Comment mes données sont-elles sécurisées ?
+R: Les données sont chiffrées en transit (HTTPS/TLS 1.3) et au repos (AES-256). Nous réalisons des audits de sécurité trimestriels.
+
+Q: Où sont hébergées mes données ?
+R: Les serveurs sont hébergés en France (région Paris) chez un prestataire certifié ISO 27001 et conforme au RGPD.
+
+Q: Comment signaler une faille de sécurité ?
+R: Envoyez un email à security@example.com avec le détail de la vulnérabilité. Nous nous engageons à répondre sous 48 heures.

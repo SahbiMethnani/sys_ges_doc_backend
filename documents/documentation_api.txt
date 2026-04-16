@@ -1,0 +1,275 @@
+DOCUMENTATION API REST - v2.0
+Système de Gestion Documentaire
+Dernière mise à jour : Mars 2026
+
+=================================================================
+1. INTRODUCTION
+=================================================================
+
+L'API REST permet d'intégrer le système de gestion documentaire dans vos applications. Elle suit les conventions REST et retourne des réponses au format JSON.
+
+URL de base : https://api.example.com/v2
+
+Authentification : Bearer Token (JWT)
+Format des données : JSON
+Encodage : UTF-8
+
+=================================================================
+2. AUTHENTIFICATION
+=================================================================
+
+2.1 Obtenir un token
+--------------------
+POST /auth/login
+
+Corps de la requête :
+{
+  "email": "utilisateur@example.com",
+  "password": "motdepasse"
+}
+
+Réponse (200 OK) :
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "def50200..."
+}
+
+2.2 Utiliser le token
+---------------------
+Ajoutez le header Authorization à chaque requête :
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+2.3 Rafraîchir le token
+------------------------
+POST /auth/refresh
+
+Corps :
+{
+  "refresh_token": "def50200..."
+}
+
+2.4 Se déconnecter
+------------------
+POST /auth/logout
+
+Révoque le token actuel.
+
+=================================================================
+3. DOCUMENTS
+=================================================================
+
+3.1 Lister les documents
+-------------------------
+GET /documents
+
+Paramètres de requête (optionnels) :
+- page (int) : numéro de page, défaut 1
+- per_page (int) : résultats par page, max 100, défaut 20
+- sort (string) : champ de tri (name, created_at, size)
+- order (string) : asc ou desc
+- folder_id (string) : filtrer par dossier
+- type (string) : filtrer par type (pdf, docx, xlsx...)
+
+Réponse (200 OK) :
+{
+  "data": [
+    {
+      "id": "doc_123abc",
+      "name": "rapport_annuel.pdf",
+      "type": "pdf",
+      "size": 2048576,
+      "created_at": "2026-01-15T10:30:00Z",
+      "updated_at": "2026-02-20T14:22:00Z",
+      "owner": {
+        "id": "user_456def",
+        "name": "Jean Dupont",
+        "email": "jean.dupont@example.com"
+      },
+      "folder_id": "folder_789ghi",
+      "shared": false,
+      "starred": true
+    }
+  ],
+  "meta": {
+    "total": 142,
+    "page": 1,
+    "per_page": 20,
+    "total_pages": 8
+  }
+}
+
+3.2 Obtenir un document
+------------------------
+GET /documents/{id}
+
+Réponse (200 OK) : objet document complet
+
+Codes d'erreur :
+- 404 : document introuvable
+- 403 : accès non autorisé
+
+3.3 Uploader un document
+-------------------------
+POST /documents/upload
+
+Content-Type: multipart/form-data
+
+Paramètres :
+- file (File) : le fichier à uploader (obligatoire)
+- folder_id (string) : dossier de destination (optionnel)
+- name (string) : nom personnalisé (optionnel, défaut = nom du fichier)
+
+Réponse (201 Created) :
+{
+  "id": "doc_newid123",
+  "name": "mon_document.pdf",
+  "size": 1024000,
+  "type": "pdf",
+  "created_at": "2026-03-08T12:00:00Z",
+  "upload_url": "https://cdn.example.com/files/doc_newid123"
+}
+
+3.4 Modifier un document
+-------------------------
+PATCH /documents/{id}
+
+Corps :
+{
+  "name": "nouveau_nom.pdf",
+  "folder_id": "folder_newlocation"
+}
+
+3.5 Supprimer un document
+--------------------------
+DELETE /documents/{id}
+
+Réponse (204 No Content)
+
+3.6 Rechercher des documents
+-----------------------------
+GET /documents/search?q=rapport+annuel&type=pdf&date_from=2026-01-01
+
+Paramètres :
+- q (string) : terme de recherche (full-text)
+- type (string) : type de fichier
+- date_from (date) : date de création minimale
+- date_to (date) : date de création maximale
+- owner_id (string) : filtrer par propriétaire
+
+=================================================================
+4. DOSSIERS
+=================================================================
+
+4.1 Lister les dossiers
+------------------------
+GET /folders
+
+4.2 Créer un dossier
+---------------------
+POST /folders
+
+Corps :
+{
+  "name": "Projets 2026",
+  "parent_id": "folder_root"
+}
+
+4.3 Supprimer un dossier
+-------------------------
+DELETE /folders/{id}
+
+Paramètres :
+- force (bool) : supprimer même si non vide, défaut false
+
+=================================================================
+5. PARTAGE
+=================================================================
+
+5.1 Partager un document
+-------------------------
+POST /documents/{id}/share
+
+Corps :
+{
+  "email": "collegue@example.com",
+  "permission": "editor",
+  "message": "Merci de réviser ce document",
+  "expires_at": "2026-04-01T00:00:00Z"
+}
+
+Permissions disponibles : reader, commentator, editor
+
+5.2 Générer un lien public
+---------------------------
+POST /documents/{id}/public-link
+
+Corps :
+{
+  "permission": "reader",
+  "password": "motdepasse123",
+  "expires_in": 604800
+}
+
+Réponse :
+{
+  "url": "https://share.example.com/f/abc123def456",
+  "expires_at": "2026-03-15T12:00:00Z"
+}
+
+=================================================================
+6. CODES D'ERREUR
+=================================================================
+
+400 Bad Request      : Données de requête invalides
+401 Unauthorized     : Token manquant ou invalide
+403 Forbidden        : Permissions insuffisantes
+404 Not Found        : Ressource introuvable
+409 Conflict         : Conflit (ex: nom de fichier déjà existant)
+413 Payload Too Large: Fichier trop volumineux
+429 Too Many Requests: Limite de requêtes dépassée
+500 Internal Error   : Erreur serveur interne
+
+Format des erreurs :
+{
+  "error": {
+    "code": "DOCUMENT_NOT_FOUND",
+    "message": "Le document avec l'ID doc_123 n'existe pas",
+    "details": {}
+  }
+}
+
+=================================================================
+7. LIMITES DE L'API
+=================================================================
+
+Rate limiting :
+- Plan Gratuit : 100 requêtes/heure
+- Plan Pro : 1000 requêtes/heure
+- Plan Entreprise : 10000 requêtes/heure
+
+Les headers de réponse indiquent votre utilisation :
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 847
+X-RateLimit-Reset: 1709899200
+
+Taille maximale d'upload via API :
+- Plan Gratuit : 10 Mo
+- Plan Pro : 100 Mo
+- Plan Entreprise : 500 Mo
+
+=================================================================
+8. WEBHOOKS
+=================================================================
+
+Les webhooks permettent de recevoir des notifications en temps réel.
+
+Événements disponibles :
+- document.created : nouveau document uploadé
+- document.updated : document modifié
+- document.deleted : document supprimé
+- document.shared : document partagé
+- storage.quota_warning : 80% du stockage utilisé
+
+Configuration : Paramètres > API > Webhooks > Ajouter un endpoint

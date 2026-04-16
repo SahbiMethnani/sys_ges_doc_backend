@@ -1,0 +1,154 @@
+POLITIQUE DE SÉCURITÉ ET CONFIDENTIALITÉ
+Système de Gestion Documentaire
+Version 3.1 - Janvier 2026
+
+=================================================================
+1. CHIFFREMENT DES DONNÉES
+=================================================================
+
+1.1 Données en transit
+----------------------
+Toutes les communications entre les clients (navigateurs, applications mobiles) et nos serveurs utilisent :
+- TLS 1.3 (Transport Layer Security)
+- Certificats SSL/TLS émis par une autorité de certification reconnue
+- HSTS (HTTP Strict Transport Security) activé
+- Perfect Forward Secrecy (PFS) pour protéger les sessions passées
+
+1.2 Données au repos
+--------------------
+Tous les fichiers et données stockés sont chiffrés avec :
+- AES-256 (Advanced Encryption Standard)
+- Clés de chiffrement gérées par un HSM (Hardware Security Module)
+- Rotation des clés tous les 90 jours
+
+1.3 Mots de passe
+-----------------
+Les mots de passe ne sont jamais stockés en clair. Nous utilisons :
+- bcrypt avec un facteur de coût de 12
+- Salage unique par mot de passe
+- Politique de mot de passe forte (8 caractères min, majuscule, chiffre, caractère spécial)
+
+=================================================================
+2. CONTRÔLE D'ACCÈS
+=================================================================
+
+2.1 Authentification
+--------------------
+- Authentification par email/mot de passe
+- Authentification à deux facteurs (2FA) disponible via TOTP (Google Authenticator, Authy)
+- Support SSO (Single Sign-On) via SAML 2.0 et OAuth 2.0 (plan Entreprise)
+- Blocage du compte après 5 tentatives échouées (30 minutes)
+- Sessions expirées après 8 heures d'inactivité
+
+2.2 Permissions
+---------------
+Modèle RBAC (Role-Based Access Control) :
+- Administrateur : gestion complète du compte entreprise
+- Manager : gestion des utilisateurs et des documents partagés
+- Utilisateur : gestion de ses propres documents
+- Invité : lecture seule sur les documents explicitement partagés
+
+2.3 Journalisation
+------------------
+Toutes les actions sont journalisées :
+- Connexions et déconnexions
+- Upload, téléchargement, modification et suppression de fichiers
+- Partages et modifications de permissions
+- Changements de configuration
+
+Les journaux sont conservés 12 mois et disponibles dans Paramètres > Audit.
+
+=================================================================
+3. INFRASTRUCTURE ET HÉBERGEMENT
+=================================================================
+
+3.1 Localisation des données
+-----------------------------
+- Données hébergées exclusivement en France (région Paris, AWS eu-west-3)
+- Aucun transfert de données hors de l'Union Européenne
+- Conformité RGPD garantie
+
+3.2 Disponibilité et résilience
+--------------------------------
+- SLA : 99,9% de disponibilité (hors maintenances planifiées)
+- Architecture multi-zones pour la haute disponibilité
+- Sauvegardes automatiques quotidiennes, conservées 30 jours
+- RTO (Recovery Time Objective) : 4 heures
+- RPO (Recovery Point Objective) : 1 heure
+
+3.3 Certifications
+------------------
+- ISO 27001 (Sécurité de l'information)
+- SOC 2 Type II
+- Certification HDS (Hébergeur de Données de Santé) - disponible sur demande
+
+=================================================================
+4. CONFORMITÉ RGPD
+=================================================================
+
+4.1 Données collectées
+-----------------------
+Nous collectons uniquement les données nécessaires :
+- Données d'identification (nom, email)
+- Données de connexion (adresse IP, navigateur, horodatages)
+- Contenu des documents uploadés
+- Métadonnées des fichiers (nom, taille, type, date)
+
+4.2 Droits des utilisateurs
+----------------------------
+Conformément au RGPD, vous disposez des droits suivants :
+- Droit d'accès : demander une copie de vos données
+- Droit de rectification : corriger vos données personnelles
+- Droit à l'effacement : supprimer votre compte et toutes vos données
+- Droit à la portabilité : exporter vos données en format standard
+- Droit d'opposition : refuser certains traitements
+
+Pour exercer ces droits : privacy@example.com ou via Paramètres > Confidentialité.
+
+4.3 Durées de conservation
+---------------------------
+- Données de compte : jusqu'à la suppression du compte
+- Documents : jusqu'à leur suppression par l'utilisateur
+- Journaux d'audit : 12 mois
+- Sauvegardes : 30 jours après la suppression
+- Données de facturation : 10 ans (obligation légale)
+
+4.4 DPO (Délégué à la Protection des Données)
+----------------------------------------------
+Notre DPO est joignable à : dpo@example.com
+Adresse postale : DPO - Example SAS, 12 rue de la Paix, 75001 Paris
+
+=================================================================
+5. GESTION DES INCIDENTS
+=================================================================
+
+5.1 Procédure en cas de violation de données
+---------------------------------------------
+En cas de violation de données :
+1. Détection et qualification de l'incident (J)
+2. Notification de la CNIL sous 72 heures (J+3)
+3. Notification des utilisateurs concernés si risque élevé (J+3)
+4. Rapport d'incident complet disponible dans les 30 jours
+
+5.2 Programme de Bug Bounty
+----------------------------
+Nous encourageons la divulgation responsable des vulnérabilités.
+Contactez : security@example.com
+Réponse garantie sous 48 heures ouvrées.
+Récompenses selon gravité : de 100€ à 5000€.
+
+=================================================================
+6. SÉCURITÉ APPLICATIVE
+=================================================================
+
+Mesures de sécurité applicatives :
+- Protection CSRF (Cross-Site Request Forgery)
+- Protection XSS (Cross-Site Scripting)
+- Validation stricte des entrées utilisateur
+- Protection contre l'injection SQL (ORM + requêtes paramétrées)
+- Headers de sécurité HTTP (CSP, X-Frame-Options, etc.)
+- Scan automatique des fichiers uploadés (antivirus)
+- Tests de pénétration trimestriels par un prestataire externe
+
+Dernière revue de sécurité : Janvier 2026
+Prochain audit planifié : Avril 2026

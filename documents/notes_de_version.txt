@@ -1,0 +1,146 @@
+NOTES DE VERSION - HISTORIQUE DES MISES À JOUR
+Système de Gestion Documentaire
+
+=================================================================
+VERSION 2.4.0 - Mars 2026
+=================================================================
+
+NOUVELLES FONCTIONNALITÉS
+--------------------------
+- Système RAG (Retrieval-Augmented Generation) : posez des questions en langage naturel sur vos documents
+- Recherche sémantique : trouvez des documents par leur sens, pas seulement par mots-clés
+- Assistant IA intégré : génération automatique de résumés de documents
+- Support des fichiers RAW et formats texte brut amélioré
+
+AMÉLIORATIONS
+-------------
+- Performance de l'upload améliorée de 40% pour les fichiers de grande taille
+- Interface utilisateur modernisée (nouveau thème sombre disponible)
+- Notifications en temps réel via WebSocket (plus de délai)
+- API v2 : nouveaux endpoints pour la gestion des webhooks
+
+CORRECTIONS DE BUGS
+-------------------
+- Correction de l'affichage des PDFs protégés par mot de passe
+- Résolution du problème de déconnexion intempestive après 30 minutes
+- Correction de l'export ZIP qui échouait pour les dossiers de plus de 1000 fichiers
+
+=================================================================
+VERSION 2.3.0 - Décembre 2025
+=================================================================
+
+NOUVELLES FONCTIONNALITÉS
+--------------------------
+- Intégration Microsoft Teams : partage de documents directement depuis Teams
+- Signature électronique : signez des documents PDF sans quitter l'application
+- Workflows d'approbation : créez des circuits de validation multi-étapes
+- Mode hors ligne pour l'application mobile (synchronisation automatique à la reconnexion)
+
+AMÉLIORATIONS
+-------------
+- Nouvelle interface de gestion des permissions plus intuitive
+- Compression automatique des images PNG et JPEG à l'upload (réduction 30-50%)
+- Amélioration de la prévisualisation des fichiers Excel complexes
+- Recherche full-text maintenant disponible dans 15 langues
+
+CORRECTIONS DE BUGS
+-------------------
+- Correction du bug où les dossiers partagés n'apparaissaient pas pour les nouveaux membres
+- Résolution des problèmes de téléchargement sur Safari iOS 16
+
+=================================================================
+VERSION 2.2.0 - Septembre 2025
+=================================================================
+
+NOUVELLES FONCTIONNALITÉS
+--------------------------
+- Versioning amélioré : conservation de 50 versions (au lieu de 10)
+- Comparaison de versions côte-à-côte pour les documents texte
+- Labels et tags colorés pour organiser les documents
+- Tableau de bord analytique : statistiques d'utilisation détaillées
+
+AMÉLIORATIONS
+-------------
+- API REST v2 avec support des webhooks
+- Authentification SSO via SAML 2.0 (plan Entreprise)
+- Amélioration des performances de recherche (résultats 3x plus rapides)
+- Nouvelle application de bureau Windows et macOS
+
+SÉCURITÉ
+--------
+- Migration vers TLS 1.3 (abandon de TLS 1.2)
+- Implémentation de la politique de mots de passe renforcée
+- Audit de sécurité complet par un prestataire externe
+- Certification ISO 27001 obtenue
+
+=================================================================
+VERSION 2.1.0 - Juin 2025
+=================================================================
+
+NOUVELLES FONCTIONNALITÉS
+--------------------------
+- Corbeille avec récupération sous 30 jours
+- Import en masse depuis Google Drive et OneDrive
+- Notifications par email configurables par type d'événement
+- Application Android (version bêta)
+
+AMÉLIORATIONS
+-------------
+- Refonte complète de l'interface mobile (responsive design)
+- Amélioration de la prévisualisation des fichiers PPTX
+- Nouveau système de cache pour les prévisualisations (chargement 5x plus rapide)
+
+CORRECTIONS DE BUGS
+-------------------
+- Correction du problème d'encodage UTF-8 pour les noms de fichiers avec caractères spéciaux
+- Résolution du bug de téléchargement multiple qui créait des archives corrompues
+
+=================================================================
+VERSION 2.0.0 - Mars 2025
+=================================================================
+
+REFONTE MAJEURE
+---------------
+Cette version marque une refonte complète du système.
+
+NOUVELLES FONCTIONNALITÉS
+--------------------------
+- Architecture microservices pour une meilleure scalabilité
+- Nouveau modèle de permissions RBAC (rôles et droits granulaires)
+- API REST complète avec documentation OpenAPI/Swagger
+- Support des webhooks
+- Intégration Slack
+- Authentification 2FA via TOTP
+
+MIGRATION DEPUIS V1
+-------------------
+La migration depuis la version 1.x est automatique.
+Toutes vos données ont été conservées.
+Les anciennes URLs de l'API v1 restent fonctionnelles jusqu'au 31 Décembre 2025.
+
+=================================================================
+VERSIONS ANTÉRIEURES
+=================================================================
+
+v1.8.0 (Décembre 2024) : Amélioration des performances, support XLSX
+v1.7.0 (Septembre 2024) : Partage par lien public, protection par mot de passe
+v1.6.0 (Juin 2024) : Première version de l'application iOS
+v1.5.0 (Mars 2024) : Support des gros fichiers (jusqu'à 100 Mo)
+v1.0.0 (Janvier 2024) : Première version publique
+
+=================================================================
+CALENDRIER DES PROCHAINES VERSIONS
+=================================================================
+
+Version 2.5.0 (Juin 2026) - Prévu :
+- Édition collaborative en temps réel (documents texte)
+- Intégration avec les principaux outils de gestion de projet
+- IA : classification automatique des documents par contenu
+
+Version 3.0.0 (Décembre 2026) - En développement :
+- Refonte complète de l'interface utilisateur
+- Support des documents vidéo
+- Transcription automatique des réunions
+
+Pour les annonces de fonctionnalités à venir : blog.example.com
+Pour voter pour les prochaines fonctionnalités : feedback.example.com

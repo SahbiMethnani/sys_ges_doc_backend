@@ -1,0 +1,30 @@
+# Dépendances pour le système RAG
+
+# LangChain - Framework RAG (versions compatibles avec Python 3.12)
+langchain==0.2.0
+langchain-community==0.2.0
+langchain-core==0.2.0
+
+# ChromaDB - Base de données vectorielle
+chromadb==0.5.0
+
+# Embeddings
+sentence-transformers==3.0.0
+huggingface-hub==0.21.0
+
+# Ollama - Interface pour LLM local
+ollama==0.2.0
+
+# Chargement de documents
+pypdf==4.0.0
+unstructured==0.11.8
+python-magic-bin==0.4.14  # Pour Windows
+
+# API REST (optionnel - pour intégration Spring Boot)
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+python-multipart==0.0.8
+
+# Utilitaires
+python-dotenv==1.0.0
+tqdm==4.67.0

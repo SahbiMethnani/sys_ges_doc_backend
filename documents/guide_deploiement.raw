@@ -1,0 +1,50 @@
+GUIDE DE DÉPLOIEMENT - APPLICATION WEB
+
+=== INTRODUCTION ===
+Ce document décrit la procédure de déploiement de l'application web en production.
+
+=== PRÉREQUIS ===
+- Docker version 20.10 ou supérieur
+- Docker Compose version 2.0 ou supérieur
+- Accès SSH au serveur de production
+- Variables d'environnement configurées
+
+=== ÉTAPES DE DÉPLOIEMENT ===
+
+1. PRÉPARATION
+   - Cloner le repository: git clone https://github.com/votre-projet.git
+   - Se placer dans le dossier: cd votre-projet
+   - Créer le fichier .env avec les variables d'environnement
+
+2. CONFIGURATION
+   - Base de données: PostgreSQL 14
+   - Port application: 8080
+   - Port base de données: 5432
+
+3. COMMANDES DOCKER
+   - Lancer l'application: docker-compose up -d
+   - Arrêter l'application: docker-compose down
+   - Voir les logs: docker-compose logs -f
+   - Redémarrer: docker-compose restart
+
+4. VÉRIFICATION
+   - Accéder à l'application: http://localhost:8080
+   - Vérifier les logs pour erreurs
+   - Tester les endpoints API: /health, /api/status
+
+=== RÉSOLUTION DE PROBLÈMES ===
+
+Erreur: "Port 8080 déjà utilisé"
+Solution: Modifier le port dans docker-compose.yml
+
+Erreur: "Connexion base de données refusée"
+Solution: Vérifier les credentials dans le fichier .env
+
+=== MAINTENANCE ===
+- Backup quotidien à 2h du matin
+- Logs conservés pendant 30 jours
+- Monitoring via Prometheus et Grafana
+
+=== CONTACT ===
+Équipe DevOps: devops@example.com
+Support technique: support@example.com
