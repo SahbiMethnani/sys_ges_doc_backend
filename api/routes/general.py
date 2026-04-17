@@ -8,7 +8,8 @@ from fastapi import APIRouter
 
 from api.models import StatusResponse
 from api.dependencies import get_rag
-from config import CHROMA_PERSIST_DIR, DOCUMENTS_FOLDER
+from config import DOCUMENTS_FOLDER
+from vectorstore import vector_index_exists
 
 router = APIRouter(tags=["Général"])
 
@@ -32,6 +33,6 @@ async def get_status():
     return StatusResponse(
         status="online",
         documents_loaded=rag is not None and rag.vectorstore is not None,
-        vector_store_exists=os.path.exists(CHROMA_PERSIST_DIR),
+        vector_store_exists=vector_index_exists(),
         total_documents=len(files),
     )

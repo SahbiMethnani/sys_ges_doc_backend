@@ -2,27 +2,33 @@
 # config.py — Configuration centralisée du système RAG
 # =============================================================
 
-# Désactiver la télémétrie ChromaDB (doit être fait avant tout import chromadb)
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
+
 os.environ["ANONYMIZED_TELEMETRY"] = "False"
-os.environ["CHROMA_TELEMETRY"] = "False"
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 # --- LLM ---
-LLM_MODEL = "mistral"            # Modèle Ollama: tinyllama, mistral, llama3...
-LLM_BASE_URL = "http://localhost:11434"
-LLM_TEMPERATURE = 0.1            # Bas = réponses plus précises et courtes
+LLM_MODEL = os.environ.get("LLM_MODEL", "mistral")
+LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:11434")
+LLM_TEMPERATURE = float(os.environ.get("LLM_TEMPERATURE", "0.1"))
 
 # --- Embeddings ---
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-# Pour le français: "dangvantuan/sentence-camembert-large"
-EMBEDDING_DEVICE = "cpu"
+EMBEDDING_MODEL = os.environ.get(
+    "EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"
+)
+EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE", "cpu")
 
-# --- ChromaDB ---
-CHROMA_PERSIST_DIR = "./chroma_db"
+# --- LanceDB (stockage local, meilleure tenue sous Windows que ChromaDB) ---
+LANCE_DB_PATH = os.environ.get("LANCE_DB_PATH", "./lance_db")
+LANCE_TABLE_NAME = os.environ.get("LANCE_TABLE_NAME", "documents")
 
 # --- Documents ---
-DOCUMENTS_FOLDER = "./documents"
+DOCUMENTS_FOLDER = os.environ.get("DOCUMENTS_FOLDER", "./documents")
 SUPPORTED_EXTENSIONS = {".pdf", ".html", ".txt", ".raw"}
 
 # --- Retrieval ---

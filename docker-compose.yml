@@ -1,0 +1,22 @@
+services:
+  rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rag-api:local
+    container_name: rag-api
+    ports:
+      - "8000:8000"
+    environment:
+      # Ollama sur la machine hôte (Docker Desktop / Linux avec host-gateway)
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:11434}
+      LLM_MODEL: ${LLM_MODEL:-mistral}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./documents:/app/documents
+      - ./lance_db:/app/lance_db
+      - hf_cache:/root/.cache/huggingface
+
+volumes:
+  hf_cache:

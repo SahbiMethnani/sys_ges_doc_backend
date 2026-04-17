@@ -1,41 +1,50 @@
 """
 Système RAG complet pour PFE
 Documents supportés: PDF, HTML, .raw (texte brut)
-Base vectorielle: ChromaDB
+Base vectorielle: LanceDB
 LLM: Modèles open-source (Llama/Mistral via Ollama)
 """
 
 import os
-from typing import List
+import shutil
 from pathlib import Path
+from typing import List
 
+import lancedb
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
     PyPDFLoader,
+    TextLoader,
     UnstructuredHTMLLoader,
-    TextLoader
 )
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
-from langchain_community.llms import Ollama
+from langchain_community.vectorstores import LanceDB
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
+from langchain_community.llms import Ollama
+
+from rag import chunk_document_source
 
 
 class RAGSystem:
     """Système RAG pour documentation technique"""
     
-    def __init__(self, 
-                 persist_directory: str = "./chroma_db",
-                 model_name: str = "mistral"):
+    def __init__(
+        self,
+        persist_directory: str = "./lance_db",
+        table_name: str = "documents",
+        model_name: str = "mistral",
+    ):
         """
         Initialiser le système RAG
-        
+
         Args:
-            persist_directory: Dossier pour sauvegarder ChromaDB
+            persist_directory: Dossier LanceDB (URI locale)
+            table_name: Nom de la table vectorielle
             model_name: Modèle Ollama à utiliser (mistral, llama2, etc.)
         """
         self.persist_directory = persist_directory
+        self.table_name = table_name
         self.model_name = model_name
         
         # Embeddings - modèle français si besoin
@@ -110,7 +119,7 @@ class RAGSystem:
     
     def process_documents(self, documents: List):
         """
-        Découper et indexer les documents dans ChromaDB
+        Découper et indexer les documents dans LanceDB
         
         Args:
             documents: Liste des documents à traiter
@@ -119,11 +128,14 @@ class RAGSystem:
         chunks = self.text_splitter.split_documents(documents)
         print(f"📊 {len(chunks)} chunks créés")
         
-        print("\n🔍 Création des embeddings et indexation dans ChromaDB...")
-        self.vectorstore = Chroma.from_documents(
+        print("\n🔍 Création des embeddings et indexation dans LanceDB...")
+        conn = lancedb.connect(self.persist_directory)
+        self.vectorstore = LanceDB.from_documents(
             documents=chunks,
             embedding=self.embeddings,
-            persist_directory=self.persist_directory
+            connection=conn,
+            table_name=self.table_name,
+            mode="overwrite",
         )
         
         print(f"💾 Base vectorielle sauvegardée dans {self.persist_directory}")
@@ -131,9 +143,15 @@ class RAGSystem:
     def load_existing_vectorstore(self):
         """Charger une base vectorielle existante"""
         print(f"📖 Chargement de la base vectorielle depuis {self.persist_directory}...")
-        self.vectorstore = Chroma(
-            persist_directory=self.persist_directory,
-            embedding_function=self.embeddings
+        conn = lancedb.connect(self.persist_directory)
+        if self.table_name not in conn.table_names():
+            raise FileNotFoundError(
+                f"Table LanceDB « {self.table_name} » absente. Indexez d'abord les documents."
+            )
+        self.vectorstore = LanceDB(
+            connection=conn,
+            embedding=self.embeddings,
+            table_name=self.table_name,
         )
         print("✅ Base vectorielle chargée")
     
@@ -193,8 +211,7 @@ Réponse détaillée:"""
         if show_sources and 'source_documents' in result:
             print("\n📚 Sources utilisées:")
             for i, doc in enumerate(result['source_documents'], 1):
-                source = doc.metadata.get('source', 'Source inconnue')
-                print(f"  {i}. {source}")
+                print(f"  {i}. {chunk_document_source(doc)}")
                 print(f"     Extrait: {doc.page_content[:200]}...")
         
         return result
@@ -205,8 +222,8 @@ def main():
     
     # Initialiser le système RAG
     rag = RAGSystem(
-        persist_directory="./chroma_db",
-        model_name="mistral"  # ou "llama2", "llama3", etc.
+        persist_directory="./lance_db",
+        model_name="mistral",  # ou "llama2", "llama3", etc.
     )
     
     # Option 1: Charger de nouveaux documents
@@ -223,13 +240,15 @@ def main():
         return
     
     # Vérifier si la base existe déjà
-    if os.path.exists(rag.persist_directory):
+    conn = lancedb.connect(rag.persist_directory)
+    if rag.table_name in conn.table_names():
         print("\n📚 Base vectorielle existante détectée.")
-        choice = input("Voulez-vous (1) Recharger les documents ou (2) Utiliser la base existante? [1/2]: ")
-        
+        choice = input(
+            "Voulez-vous (1) Recharger les documents ou (2) Utiliser la base existante? [1/2]: "
+        )
+
         if choice == "1":
-            import shutil
-            shutil.rmtree(rag.persist_directory)
+            shutil.rmtree(rag.persist_directory, ignore_errors=True)
             documents = rag.load_documents(documents_folder)
             rag.process_documents(documents)
         else:

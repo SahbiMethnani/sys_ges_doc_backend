@@ -6,9 +6,7 @@ import os
 import sys
 import warnings
 
-# Désactiver télémétrie AVANT tout import chromadb
 os.environ["ANONYMIZED_TELEMETRY"] = "False"
-os.environ["CHROMA_TELEMETRY"] = "False"
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 warnings.filterwarnings("ignore")
 
@@ -19,7 +17,8 @@ from fastapi.middleware.cors import CORSMiddleware
 # Ajouter le dossier racine au path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import CHROMA_PERSIST_DIR, DOCUMENTS_FOLDER
+from config import DOCUMENTS_FOLDER
+from vectorstore import vector_index_exists
 from embeddings import get_embeddings
 from llm import get_llm
 from rag import RAGSystem
@@ -34,7 +33,7 @@ from api.routes import general, query, documents
 
 app = FastAPI(
     title="RAG API",
-    description="API REST pour interroger des documents via RAG (LangChain + ChromaDB + Ollama)",
+    description="API REST pour interroger des documents via RAG (LangChain + LanceDB + Ollama)",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -77,7 +76,7 @@ async def startup_event():
     rag = RAGSystem(vectorstore=None, llm=llm)
     rag.embeddings = embeddings  # Exposé pour la réindexation
 
-    if os.path.exists(CHROMA_PERSIST_DIR):
+    if vector_index_exists():
         try:
             rag.vectorstore = load_vectorstore(embeddings)
             print("✅ Base vectorielle chargée automatiquement")

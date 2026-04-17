@@ -10,11 +10,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 
 from api.models import DocumentInfo, MessageResponse
 from api.dependencies import get_rag
-from config import DOCUMENTS_FOLDER, CHROMA_PERSIST_DIR, SUPPORTED_EXTENSIONS
-
-import threading
-
-chroma_lock = threading.Lock()
+from config import DOCUMENTS_FOLDER, LANCE_DB_PATH, SUPPORTED_EXTENSIONS
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -66,7 +62,7 @@ async def upload_document(file: UploadFile = File(...)):
 @router.post("/index")
 async def index_documents():
     """
-    Réindexe tous les documents du dossier dans ChromaDB.
+    Réindexe tous les documents du dossier dans LanceDB.
     À appeler après chaque upload.
     """
     import sys
@@ -81,14 +77,15 @@ async def index_documents():
         raise HTTPException(status_code=503, detail="Système RAG non initialisé.")
 
     try:
-        if os.path.exists(CHROMA_PERSIST_DIR):
-            shutil.rmtree(CHROMA_PERSIST_DIR)
+        if os.path.isdir(LANCE_DB_PATH):
+            shutil.rmtree(LANCE_DB_PATH, ignore_errors=True)
 
         documents = load_documents(DOCUMENTS_FOLDER)
         if not documents:
             raise HTTPException(status_code=400, detail="Aucun document trouvé dans le dossier.")
 
         rag.vectorstore = build_vectorstore(documents, rag.embeddings)
+        rag.reset_qa_chain()
 
         return {
             "message": "Indexation réussie",

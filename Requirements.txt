@@ -5,8 +5,8 @@ langchain==0.2.0
 langchain-community==0.2.0
 langchain-core==0.2.0
 
-# ChromaDB - Base de données vectorielle
-chromadb==0.5.0
+# LanceDB - Base de données vectorielle (local, moins problématique que Chroma sous Windows)
+lancedb>=0.10.0
 
 # Embeddings
 sentence-transformers==3.0.0

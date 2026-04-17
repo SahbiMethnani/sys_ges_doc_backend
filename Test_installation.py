@@ -10,7 +10,7 @@ def check_imports():
     
     packages = [
         ("langchain", "LangChain"),
-        ("chromadb", "ChromaDB"),
+        ("lancedb", "LanceDB"),
         ("sentence_transformers", "Sentence Transformers"),
         ("pypdf", "PyPDF"),
         ("ollama", "Ollama"),
@@ -106,7 +106,8 @@ def test_simple_rag():
         from langchain_community.document_loaders import TextLoader
         from langchain.text_splitter import RecursiveCharacterTextSplitter
         from langchain_community.embeddings import HuggingFaceEmbeddings
-        from langchain_community.vectorstores import Chroma
+        import lancedb
+        from langchain_community.vectorstores import LanceDB
         from langchain_community.llms import Ollama
         from langchain.chains import RetrievalQA
         
@@ -142,10 +143,13 @@ def test_simple_rag():
         
         print("\n4️⃣ Création de la base vectorielle...")
         with tempfile.TemporaryDirectory() as temp_dir:
-            vectorstore = Chroma.from_documents(
+            conn = lancedb.connect(temp_dir)
+            vectorstore = LanceDB.from_documents(
                 documents=chunks,
                 embedding=embeddings,
-                persist_directory=temp_dir
+                connection=conn,
+                table_name="test_vectors",
+                mode="overwrite",
             )
             print("   ✅ Base vectorielle créée")
             

@@ -1,0 +1,17 @@
+.git
+.gitignore
+venv
+.venv
+env
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.log
+.idea
+.vscode
+lance_db
+chroma_db
+*.md
+documents/*.pdf

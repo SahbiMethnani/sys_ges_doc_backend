@@ -1,7 +1,27 @@
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
+from langchain_core.documents import Document
 
 from config import TOP_K_CHUNKS, PROMPT_TEMPLATE
+
+
+def chunk_document_source(doc: Document) -> str:
+    """
+    Chemin/nom de fichier source pour un chunk.
+
+    LanceDB (intégration LangChain) stocke les métadonnées d'origine dans
+    metadata['metadata'] ; Chroma les plaçait à la racine.
+    """
+    m = doc.metadata or {}
+    src = m.get("source")
+    if isinstance(src, str) and src:
+        return src
+    nested = m.get("metadata")
+    if isinstance(nested, dict):
+        s = nested.get("source")
+        if isinstance(s, str) and s:
+            return s
+    return "Inconnu"
 
 
 class RAGSystem:
@@ -13,7 +33,7 @@ class RAGSystem:
     def __init__(self, vectorstore, llm):
         """
         Args:
-            vectorstore: Base vectorielle Chroma chargée.
+            vectorstore: Base vectorielle LanceDB chargée.
             llm:         Modèle de langage Ollama initialisé.
         """
         self.vectorstore = vectorstore
@@ -47,6 +67,10 @@ class RAGSystem:
             self._qa_chain = self._build_qa_chain()
         return self._qa_chain
 
+    def reset_qa_chain(self) -> None:
+        """À appeler après remplacement du vectorstore (réindexation)."""
+        self._qa_chain = None
+
     # ------------------------------------------------------------------
     # Requête
     # ------------------------------------------------------------------
@@ -72,7 +96,7 @@ class RAGSystem:
         if show_sources and "source_documents" in result:
             print("\n📚 Sources utilisées :")
             for i, doc in enumerate(result["source_documents"], 1):
-                source = doc.metadata.get("source", "Source inconnue")
+                source = chunk_document_source(doc)
                 print(f"  {i}. {source}")
                 print(f"     ↳ {doc.page_content[:200].strip()}...")
 

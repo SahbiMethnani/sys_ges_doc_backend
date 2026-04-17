@@ -1,0 +1,13 @@
+# Modifiez LLM_BASE_URL selon votre cluster local :
+# - Docker Desktop Kubernetes (Windows/Mac) : host.docker.internal
+# - Minikube : souvent http://host.minikube.internal:11434
+# - Ollama dans le même cluster : URL du Service (ex. http://ollama:11434)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rag-api-config
+  labels:
+    app: rag-api
+data:
+  LLM_BASE_URL: "http://host.docker.internal:11434"
+  LLM_MODEL: "mistral"

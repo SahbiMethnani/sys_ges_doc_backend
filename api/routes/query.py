@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 
 from api.models import QueryRequest, QueryResponse, SourceDocument
 from api.dependencies import get_rag
+from rag import chunk_document_source
 
 router = APIRouter(prefix="/query", tags=["RAG"])
 
@@ -33,7 +34,7 @@ async def query_documents(request: QueryRequest):
         if request.show_sources and "source_documents" in result:
             sources = [
                 SourceDocument(
-                    source=doc.metadata.get("source", "Inconnu"),
+                    source=chunk_document_source(doc),
                     content=doc.page_content[:300],
                 )
                 for doc in result["source_documents"]

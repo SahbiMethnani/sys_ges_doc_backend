@@ -1,25 +1,38 @@
 # =============================================================
-# vectorstore.py — Gestion de la base vectorielle ChromaDB
+# vectorstore.py — Gestion de la base vectorielle LanceDB
 # =============================================================
 
+import os
 from typing import List
 
-from langchain_community.vectorstores import Chroma
+import lancedb
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import LanceDB
 
-from config import CHROMA_PERSIST_DIR, CHUNK_SIZE, CHUNK_OVERLAP
+from config import CHUNK_OVERLAP, CHUNK_SIZE, LANCE_DB_PATH, LANCE_TABLE_NAME
 
 
-def build_vectorstore(documents: List, embeddings) -> Chroma:
+def vector_index_exists() -> bool:
+    """True si le dossier LanceDB existe et contient la table d'index."""
+    if not os.path.isdir(LANCE_DB_PATH):
+        return False
+    try:
+        conn = lancedb.connect(LANCE_DB_PATH)
+        return LANCE_TABLE_NAME in conn.table_names()
+    except OSError:
+        return False
+
+
+def build_vectorstore(documents: List, embeddings) -> LanceDB:
     """
-    Découpe les documents en chunks et crée la base ChromaDB.
+    Découpe les documents en chunks et crée la base LanceDB.
 
     Args:
         documents: Documents LangChain chargés.
         embeddings: Modèle d'embeddings.
 
     Returns:
-        Instance Chroma indexée et persistée sur disque.
+        Instance LanceDB indexée et persistée sur disque.
     """
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
@@ -32,30 +45,39 @@ def build_vectorstore(documents: List, embeddings) -> Chroma:
     chunks = splitter.split_documents(documents)
     print(f"📊 {len(chunks)} chunk(s) créé(s)")
 
-    print("🔍 Indexation dans ChromaDB...")
-    vectorstore = Chroma.from_documents(
+    print("🔍 Indexation dans LanceDB...")
+    conn = lancedb.connect(LANCE_DB_PATH)
+    vectorstore = LanceDB.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory=CHROMA_PERSIST_DIR,
+        connection=conn,
+        table_name=LANCE_TABLE_NAME,
+        mode="overwrite",
     )
-    print(f"💾 Base sauvegardée dans {CHROMA_PERSIST_DIR}")
+    print(f"💾 Base sauvegardée dans {LANCE_DB_PATH} (table {LANCE_TABLE_NAME})")
     return vectorstore
 
 
-def load_vectorstore(embeddings) -> Chroma:
+def load_vectorstore(embeddings) -> LanceDB:
     """
-    Charge une base ChromaDB existante depuis le disque.
+    Charge une base LanceDB existante depuis le disque.
 
     Args:
         embeddings: Modèle d'embeddings (doit être identique à celui utilisé à la création).
 
     Returns:
-        Instance Chroma chargée.
+        Instance LanceDB chargée.
     """
-    print(f"📖 Chargement de la base vectorielle depuis {CHROMA_PERSIST_DIR}...")
-    vectorstore = Chroma(
-        persist_directory=CHROMA_PERSIST_DIR,
-        embedding_function=embeddings,
+    print(f"📖 Chargement de la base vectorielle depuis {LANCE_DB_PATH}...")
+    conn = lancedb.connect(LANCE_DB_PATH)
+    if LANCE_TABLE_NAME not in conn.table_names():
+        raise FileNotFoundError(
+            f"Table LanceDB « {LANCE_TABLE_NAME} » absente. Réindexez les documents."
+        )
+    vectorstore = LanceDB(
+        connection=conn,
+        embedding=embeddings,
+        table_name=LANCE_TABLE_NAME,
     )
     print("✅ Base vectorielle chargée")
     return vectorstore
