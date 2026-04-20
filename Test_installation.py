@@ -168,7 +168,7 @@ def test_simple_rag():
             print(f"\n   Question: {question}")
             print("   Génération de la réponse...")
             
-            result = qa_chain({"query": question})
+            result = qa_chain.invoke({"query": question})
             
             print(f"\n   💡 Réponse: {result['result']}")
             print("\n✅ TEST RÉUSSI! Le système RAG fonctionne correctement!")
