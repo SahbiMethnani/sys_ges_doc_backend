@@ -1,0 +1,5 @@
+commande de tests
+pytest
+pytest --cov=. --cov-report=term-missing : pour voir la couverture
+pytest --html=reports/report.html --self-contained-html; générer un rapport html de test 
+pytest -m unit lancer uniquement les tests unitaires

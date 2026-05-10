@@ -5,6 +5,9 @@ import subprocess
 import socket
 import os
 
+os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu"
+os.environ["QT_LOGGING_RULES"] = "*.debug=false;qt.webenginecontext.info=false"
+
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout,
                               QWidget, QPushButton, QHBoxLayout, QLabel, QMessageBox)
 from PyQt6.QtWebEngineWidgets import QWebEngineView
@@ -141,8 +144,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu"
-    os.environ["QT_LOGGING_RULES"] = "*.debug=false;qt.webenginecontext.info=false"
+
 
     app = QApplication(sys.argv)
     app.setStyle("Fusion")

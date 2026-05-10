@@ -23,6 +23,9 @@ EMBEDDING_MODEL = os.environ.get(
 )
 EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE", "cpu")
 
+
+#ChromaDBPATH = os.environ.get("CHROMADB_PATH", "./chroma_db")
+
 # --- LanceDB (stockage local, meilleure tenue sous Windows que ChromaDB) ---
 LANCE_DB_PATH = os.environ.get("LANCE_DB_PATH", "./lance_db")
 LANCE_TABLE_NAME = os.environ.get("LANCE_TABLE_NAME", "documents")

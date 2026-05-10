@@ -1,0 +1,7 @@
+[run]
+omit =
+    */DbReaderApp.py
+    */LanceDbReader.py
+    */viewer.py
+    */Test_installation.py
+    */tests/*
