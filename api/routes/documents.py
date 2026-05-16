@@ -3,14 +3,20 @@
 # =============================================================
 
 import os
+import sys
 import shutil
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, UploadFile, File
 
 from api.models import DocumentInfo, MessageResponse
-from api.dependencies import get_rag
+from api.dependencies import get_rag, set_rag
 from config import DOCUMENTS_FOLDER, LANCE_DB_PATH, SUPPORTED_EXTENSIONS
+
+# ✅ Import au niveau module → patch("api.routes.documents.load_documents") fonctionne
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from loader import load_documents
+from vectorstore import build_vectorstore
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -33,7 +39,6 @@ async def list_documents():
 async def upload_document(file: UploadFile = File(...)):
     """
     Uploade un nouveau document.
-
     Formats acceptés : .pdf, .html, .txt, .raw
     """
     ext = Path(file.filename).suffix.lower()
@@ -65,13 +70,6 @@ async def index_documents():
     Réindexe tous les documents du dossier dans LanceDB.
     À appeler après chaque upload.
     """
-    import sys
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
-    from loader import load_documents
-    from vectorstore import build_vectorstore
-    from api.dependencies import get_rag, set_rag
-
     rag = get_rag()
     if rag is None:
         raise HTTPException(status_code=503, detail="Système RAG non initialisé.")
