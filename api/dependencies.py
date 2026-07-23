@@ -5,7 +5,6 @@
 import sys
 import os
 
-# Ajouter le dossier parent au path pour importer les modules RAG
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from rag import RAGSystem

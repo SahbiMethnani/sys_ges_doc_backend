@@ -12,7 +12,9 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY config.py embeddings.py llm.py loader.py vectorstore.py rag.py main.py rag_system.py /app/
 COPY api /app/api/
-COPY documents /app/documents/
+
+# Échec du build si le module auth LDAP n'est pas présent dans l'image
+RUN test -f /app/api/auth/router.py && test -f /app/api/db/models.py
 
 ENV PYTHONUNBUFFERED=1 \
     DOCUMENTS_FOLDER=/app/documents \

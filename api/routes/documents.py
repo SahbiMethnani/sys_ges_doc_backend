@@ -7,8 +7,10 @@ import sys
 import shutil
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 
+from api.auth.dependencies import require_admin
+from api.db.models import User
 from api.models import DocumentInfo, MessageResponse
 from api.dependencies import get_rag, set_rag
 from config import DOCUMENTS_FOLDER, LANCE_DB_PATH, SUPPORTED_EXTENSIONS
@@ -22,7 +24,7 @@ router = APIRouter(prefix="/documents", tags=["Documents"])
 
 
 @router.get("", response_model=list[DocumentInfo])
-async def list_documents():
+async def list_documents(_admin: User = Depends(require_admin)):
     """Liste tous les documents présents dans le dossier."""
     documents = []
     for file_path in Path(DOCUMENTS_FOLDER).rglob("*"):
@@ -36,7 +38,10 @@ async def list_documents():
 
 
 @router.post("/upload")
-async def upload_document(file: UploadFile = File(...)):
+async def upload_document(
+    file: UploadFile = File(...),
+    _admin: User = Depends(require_admin),
+):
     """
     Uploade un nouveau document.
     Formats acceptés : .pdf, .html, .txt, .raw
@@ -65,7 +70,7 @@ async def upload_document(file: UploadFile = File(...)):
 
 
 @router.post("/index")
-async def index_documents():
+async def index_documents(_admin: User = Depends(require_admin)):
     """
     Réindexe tous les documents du dossier dans LanceDB.
     À appeler après chaque upload.
@@ -97,7 +102,10 @@ async def index_documents():
 
 
 @router.delete("/{filename}", response_model=MessageResponse)
-async def delete_document(filename: str):
+async def delete_document(
+    filename: str,
+    _admin: User = Depends(require_admin),
+):
     """Supprime un document du dossier."""
     file_path = Path(DOCUMENTS_FOLDER) / filename
 

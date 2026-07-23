@@ -1,0 +1,4 @@
+﻿dn: ou=users,dc=sysgesdoc,dc=local
+objectClass: organizationalUnit
+ou: users
+

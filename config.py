@@ -21,7 +21,7 @@ LLM_TEMPERATURE = float(os.environ.get("LLM_TEMPERATURE", "0.1"))
 EMBEDDING_MODEL = os.environ.get(
     "EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"
 )
-EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE", "cpu")
+EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE", "cuda")
 
 
 #ChromaDBPATH = os.environ.get("CHROMADB_PATH", "./chroma_db")
@@ -51,3 +51,35 @@ Contexte:
 Question: {question}
 
 Réponse (courte et directe):"""
+
+# --- MySQL ---
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "mysql+pymysql://root:root@localhost:3306/sys_ges_doc",
+)
+
+# --- JWT ---
+JWT_SECRET = os.environ.get("JWT_SECRET", "dev-secret-change-in-production")
+JWT_ALGORITHM = "HS256"
+JWT_ACCESS_EXPIRE_MINUTES = int(os.environ.get("JWT_ACCESS_EXPIRE_MINUTES", "60"))
+JWT_REFRESH_EXPIRE_DAYS = int(os.environ.get("JWT_REFRESH_EXPIRE_DAYS", "7"))
+
+# --- LDAP ---
+LDAP_SERVER = os.environ.get("LDAP_SERVER", "ldap://localhost")
+LDAP_PORT = int(os.environ.get("LDAP_PORT", "389"))
+LDAP_USE_SSL = os.environ.get("LDAP_USE_SSL", "false").lower() in ("1", "true", "yes")
+LDAP_BASE_DN = os.environ.get("LDAP_BASE_DN", "dc=sysgesdoc,dc=local")
+LDAP_BIND_DN = os.environ.get("LDAP_BIND_DN", "cn=admin,dc=sysgesdoc,dc=local")
+LDAP_BIND_PASSWORD = os.environ.get("LDAP_BIND_PASSWORD", "admin")
+LDAP_USER_SEARCH_BASE = os.environ.get(
+    "LDAP_USER_SEARCH_BASE", "ou=users,dc=sysgesdoc,dc=local"
+)
+LDAP_USER_SEARCH_FILTER = os.environ.get(
+    "LDAP_USER_SEARCH_FILTER", "(uid={username})"
+)
+LDAP_ORGANISATION = os.environ.get("LDAP_ORGANISATION", "SysGesDoc")
+
+# --- Auth / seed ---
+AUTH_DISABLED = os.environ.get("AUTH_DISABLED", "false").lower() in ("1", "true", "yes")
+SEED_ADMIN_USERNAME = os.environ.get("SEED_ADMIN_USERNAME", "Sahbi")
+SEED_ADMIN_DISPLAY_NAME = os.environ.get("SEED_ADMIN_DISPLAY_NAME", "Sahbi Admin")

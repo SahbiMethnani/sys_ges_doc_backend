@@ -1,4 +1,33 @@
+# Déprécié — utilisez le docker-compose à la racine du projet PFE :
+#   cd .. && docker compose up --build -d
+#
+# Ce fichier conserve une stack minimale (LDAP + API) pour compatibilité.
+
 services:
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: sys-ges-doc-ldap
+    environment:
+      LDAP_ORGANISATION: SysGesDoc
+      LDAP_DOMAIN: sysgesdoc.local
+      LDAP_ADMIN_PASSWORD: admin
+    ports:
+      - "389:389"
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: sys-ges-doc-ldap-ui
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "8081:80"
+    depends_on:
+      - openldap
+
   rag-api:
     build:
       context: .
@@ -7,12 +36,10 @@ services:
     container_name: rag-api
     ports:
       - "8000:8000"
-    environment:
-      # Ollama sur la machine hôte (Docker Desktop / Linux avec host-gateway)
-      LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:11434}
-      LLM_MODEL: ${LLM_MODEL:-mistral}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env.docker
+    depends_on:
+      - openldap
     volumes:
       - ./documents:/app/documents
       - ./lance_db:/app/lance_db
@@ -20,3 +47,5 @@ services:
 
 volumes:
   hf_cache:
+  ldap_data:
+  ldap_config:

@@ -52,7 +52,9 @@ def client(tmp_path):
     mock_rag.vectorstore = mock_vs
     mock_rag.embeddings = mock_embeddings
 
-    with patch("api.main.get_embeddings",              return_value=mock_embeddings), \
+    with patch("config.AUTH_DISABLED", True), \
+         patch("api.auth.dependencies.AUTH_DISABLED", True), \
+         patch("api.main.get_embeddings",              return_value=mock_embeddings), \
          patch("api.main.get_llm",                     return_value=mock_llm), \
          patch("api.main.vector_index_exists",         return_value=True), \
          patch("api.main.load_vectorstore",            return_value=mock_vs), \

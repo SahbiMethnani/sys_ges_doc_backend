@@ -173,7 +173,6 @@ def test_simple_rag():
             print(f"\n   💡 Réponse: {result['result']}")
             print("\n✅ TEST RÉUSSI! Le système RAG fonctionne correctement!")
         
-        # Nettoyer
         os.unlink(temp_file)
         return True
         

@@ -36,3 +36,34 @@ class DocumentInfo(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    display_name: str | None = None
+    email: str | None = None
+
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "Bearer"
+    expires_in: int
+    refresh_token: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: str | None = None
+    display_name: str | None = None
+    role: str

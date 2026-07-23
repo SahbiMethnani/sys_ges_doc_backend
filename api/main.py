@@ -26,6 +26,9 @@ from vectorstore import load_vectorstore
 
 from api.dependencies import set_rag
 from api.routes import general, query, documents
+from api.auth.router import router as auth_router
+from api.auth.user_service import ensure_admin_seed
+from api.db.session import SessionLocal
 
 # ------------------------------------------------------------------
 # Application FastAPI
@@ -39,14 +42,16 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS — autorise Angular en développement et en production
+# CORS — Angular dev, Docker frontend, Kubernetes ingress
+_cors_env = os.environ.get(
+    "CORS_ORIGINS",
+    "http://localhost:4200,http://localhost:4000,http://127.0.0.1:4200",
+)
+CORS_ORIGINS = [o.strip() for o in _cors_env.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:4200",   # Angular dev server
-        "http://localhost:4000",   # Angular prod preview
-        "http://127.0.0.1:4200",
-    ],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -56,6 +61,7 @@ app.add_middleware(
 # Enregistrement des routes
 # ------------------------------------------------------------------
 
+app.include_router(auth_router)
 app.include_router(general.router)
 app.include_router(query.router)
 app.include_router(documents.router)
@@ -68,6 +74,14 @@ app.include_router(documents.router)
 async def startup_event():
     """Initialise le système RAG au démarrage du serveur."""
     print("🚀 Démarrage de l'API RAG...")
+
+    try:
+        db = SessionLocal()
+        ensure_admin_seed(db)
+        db.close()
+        print("✅ Utilisateur admin MySQL vérifié (Sahbi)")
+    except Exception as e:
+        print(f"⚠️  MySQL non disponible — auth limitée : {e}")
 
     os.makedirs(DOCUMENTS_FOLDER, exist_ok=True)
 
@@ -104,8 +118,11 @@ if __name__ == "__main__":
     🔄 ReDoc     : http://localhost:8000/redoc
 
     Endpoints :
-      POST  /query                 → Poser une question
-      GET   /documents             → Lister les documents
+      POST  /auth/login            → Connexion LDAP
+      POST  /auth/register         → Inscription
+      GET   /auth/me               → Profil (Bearer token)
+      POST  /query                 → Poser une question (authentifié)
+      GET   /documents             → Lister les documents (admin)
       POST  /documents/upload      → Uploader un document
       POST  /documents/index       → Réindexer les documents
       DELETE /documents/{filename} → Supprimer un document

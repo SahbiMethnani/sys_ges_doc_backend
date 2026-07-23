@@ -2,8 +2,10 @@
 # api/routes/query.py — Endpoint /query
 # =============================================================
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from api.auth.dependencies import get_current_user
+from api.db.models import User
 from api.models import QueryRequest, QueryResponse, SourceDocument
 from api.dependencies import get_rag
 from rag import chunk_document_source
@@ -12,7 +14,10 @@ router = APIRouter(prefix="/query", tags=["RAG"])
 
 
 @router.post("", response_model=QueryResponse)
-async def query_documents(request: QueryRequest):
+async def query_documents(
+    request: QueryRequest,
+    _user: User = Depends(get_current_user),
+):
     """
     Pose une question au système RAG.
 
