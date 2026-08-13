@@ -21,7 +21,7 @@ LLM_TEMPERATURE = float(os.environ.get("LLM_TEMPERATURE", "0.1"))
 EMBEDDING_MODEL = os.environ.get(
     "EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"
 )
-EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE", "cuda")
+EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE", "cpu")
 
 
 #ChromaDBPATH = os.environ.get("CHROMADB_PATH", "./chroma_db")

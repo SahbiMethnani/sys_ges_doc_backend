@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 $ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $Bootstrap = Join-Path $ProjectRoot "ldap\bootstrap"
-$Container = "sys-ges-doc-ldap"
+$Container = "docrag-ldap"
 $AdminDn = "cn=admin,dc=sysgesdoc,dc=local"
 $AdminPw = "admin"
 
