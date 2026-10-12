@@ -1,7 +1,3 @@
-# =============================================================
-# api/auth/security.py — JWT et tokens de rafraîchissement
-# =============================================================
-
 import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
@@ -46,5 +42,19 @@ def hash_refresh_token(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
 
+def hash_password_reset_token(token: str) -> str:
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
 def refresh_token_expires_at() -> datetime:
     return datetime.now(timezone.utc) + timedelta(days=JWT_REFRESH_EXPIRE_DAYS)
+
+
+def generate_password_reset_token() -> str:
+    return secrets.token_urlsafe(32)
+
+
+def password_reset_token_expires_at() -> datetime:
+    from config import PASSWORD_RESET_EXPIRE_MINUTES
+
+    return datetime.now(timezone.utc) + timedelta(minutes=PASSWORD_RESET_EXPIRE_MINUTES)

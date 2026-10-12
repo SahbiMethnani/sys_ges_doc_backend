@@ -1,7 +1,3 @@
-# =============================================================
-# api/auth/dependencies.py — Utilisateur courant et contrôle d'accès
-# =============================================================
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session

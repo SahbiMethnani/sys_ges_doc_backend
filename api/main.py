@@ -1,7 +1,3 @@
-# =============================================================
-# api/main.py — Point d'entrée FastAPI
-# =============================================================
-
 import os
 import sys
 import warnings
@@ -28,7 +24,7 @@ from api.dependencies import set_rag
 from api.routes import general, query, documents
 from api.auth.router import router as auth_router
 from api.auth.user_service import ensure_admin_seed
-from api.db.session import SessionLocal
+from api.db.session import Base, SessionLocal, engine
 
 # ------------------------------------------------------------------
 # Application FastAPI
@@ -42,7 +38,6 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS — Angular dev, Docker frontend, Kubernetes ingress
 _cors_env = os.environ.get(
     "CORS_ORIGINS",
     "http://localhost:4200,http://localhost:4000,http://127.0.0.1:4200",
@@ -76,6 +71,7 @@ async def startup_event():
     print("🚀 Démarrage de l'API RAG...")
 
     try:
+        Base.metadata.create_all(bind=engine)
         db = SessionLocal()
         ensure_admin_seed(db)
         db.close()

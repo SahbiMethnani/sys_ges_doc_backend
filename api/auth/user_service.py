@@ -1,7 +1,3 @@
-# =============================================================
-# api/auth/user_service.py — Synchronisation utilisateurs MySQL
-# =============================================================
-
 from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
@@ -15,7 +11,9 @@ def get_user_by_username(db: Session, username: str) -> User | None:
 
 
 def ensure_admin_seed(db: Session) -> None:
-    """Garantit l'enregistrement MySQL de l'admin initial (Sahbi)."""
+    """seed de l'admin initial
+    creation auto 
+    """
     user = get_user_by_username(db, SEED_ADMIN_USERNAME)
     if user is None:
         db.add(

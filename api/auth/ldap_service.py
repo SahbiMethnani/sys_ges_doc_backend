@@ -1,8 +1,4 @@
-# =============================================================
-# api/auth/ldap_service.py — Authentification et inscription LDAP
-# =============================================================
-
-from ldap3 import SUBTREE, Connection, Server, ALL
+from ldap3 import MODIFY_REPLACE, SUBTREE, Connection, Server, ALL
 from ldap3.core.exceptions import LDAPException
 
 from config import (
@@ -123,6 +119,19 @@ def register_ldap_user(
             "display_name": cn,
             "ldap_dn": dn,
         }
+    except LDAPException as e:
+        raise LDAPError(f"Erreur LDAP : {e}") from e
+
+
+def change_ldap_password(user_dn: str, new_password: str) -> None:
+    try:
+        conn = _admin_connection()
+        changed = conn.modify(
+            user_dn,
+            {"userPassword": [(MODIFY_REPLACE, [new_password])]},
+        )
+        if not changed:
+            raise LDAPError(conn.result.get("message", "Modification LDAP refusée."))
     except LDAPException as e:
         raise LDAPError(f"Erreur LDAP : {e}") from e
 

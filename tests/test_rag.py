@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch, call
 import pytest
 from langchain_core.documents import Document
 
-from rag import RAGSystem, chunk_document_source
+from rag import RAGSystem, chunk_document_source, sanitize_llm_answer
 
 
 # ---------------------------------------------------------------------------
@@ -33,6 +33,25 @@ class TestChunkDocumentSource:
     def test_returns_inconnu_when_no_source(self):
         doc = Document(page_content="contenu", metadata={})
         assert chunk_document_source(doc) == "Inconnu"
+
+
+@pytest.mark.unit
+class TestSanitizeLlmAnswer:
+    def test_removes_echoed_prompt_before_answer(self):
+        echoed = (
+            "Tu es un assistant documentaire. Réponds en français uniquement.\n"
+            "Contexte:\ntexte documentaire\nQuestion: question\n"
+            "Réponse (courte et directe): La réponse est dans le document."
+        )
+        assert sanitize_llm_answer(echoed) == "La réponse est dans le document."
+
+    def test_replaces_prompt_only_output(self):
+        echoed = "Tu es un assistant documentaire. Utilise UNIQUEMENT les informations du contexte."
+        assert sanitize_llm_answer(echoed) == "Information non disponible dans la documentation."
+
+    def test_preserves_normal_answer(self):
+        answer = "La procédure se trouve dans le guide utilisateur."
+        assert sanitize_llm_answer(answer) == answer
 
     def test_returns_inconnu_when_source_empty_string(self):
         doc = Document(page_content="contenu", metadata={"source": ""})
@@ -146,6 +165,18 @@ class TestRAGSystemQuery:
         rag, _ = self._make_rag_with_mock_chain(mock_vectorstore, mock_llm, mock_qa_result)
         result = rag.query("Qu'est-ce que Python ?", show_sources=False)
         assert "result" in result
+
+    def test_query_removes_echoed_prompt_from_result(self, mock_vectorstore, mock_llm, mock_qa_result):
+        mock_qa_result["result"] = (
+            "Tu es un assistant documentaire. Utilise UNIQUEMENT les informations du contexte.\n"
+            "Contexte: documentation\nQuestion: question\n"
+            "Réponse (courte et directe): Réponse utile."
+        )
+        rag, _ = self._make_rag_with_mock_chain(mock_vectorstore, mock_llm, mock_qa_result)
+
+        result = rag.query("question", show_sources=False)
+
+        assert result["result"] == "Réponse utile."
 
     def test_query_contains_source_documents(self, mock_vectorstore, mock_llm, mock_qa_result):
         rag, _ = self._make_rag_with_mock_chain(mock_vectorstore, mock_llm, mock_qa_result)

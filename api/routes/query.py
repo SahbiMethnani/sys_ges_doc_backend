@@ -1,9 +1,4 @@
-# =============================================================
-# api/routes/query.py — Endpoint /query
-# =============================================================
-
 from fastapi import APIRouter, Depends, HTTPException
-
 from api.auth.dependencies import get_current_user
 from api.db.models import User
 from api.models import QueryRequest, QueryResponse, SourceDocument

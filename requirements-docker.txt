@@ -26,3 +26,6 @@ python-multipart==0.0.8
 
 python-dotenv==1.0.0
 tqdm==4.67.0
+
+numpy==1.26.4
+pyarrow==18.1.0
