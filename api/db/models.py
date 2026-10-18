@@ -1,7 +1,3 @@
-# =============================================================
-# api/db/models.py — Modèles ORM (tables MySQL existantes)
-# =============================================================
-
 from datetime import datetime
 
 from sqlalchemy import BigInteger, Boolean, DateTime, Enum, ForeignKey, String, func

@@ -1,6 +1,3 @@
-# =============================================================
-# api/db/session.py — Connexion SQLAlchemy MySQL
-# =============================================================
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase

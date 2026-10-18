@@ -116,6 +116,9 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
 
 @router.post("/forgot-password", response_model=MessageResponse, status_code=202)
 def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    print("DEBUG endpoint appelé, username =", repr(body.username))
+    user = get_user_by_username(db, body.username.strip())
+    print("DEBUG user:", user, "| email:", getattr(user, "email", None), "| smtp:", smtp_is_configured())
     generic_message = (
         "Si le compte existe et que l'envoi d'e-mail est configuré, "
         "un lien de réinitialisation va être envoyé."
@@ -153,8 +156,8 @@ def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
         send_password_reset_email(user.email, raw_token)
     except Exception:
         logger.exception("Échec d'envoi du lien de réinitialisation.")
-        db.delete(reset_row)
-        db.commit()
+        #db.delete(reset_row)
+        #db.commit()
 
     return MessageResponse(message=generic_message)
 

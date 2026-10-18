@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bookworm
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
@@ -8,10 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements-docker.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir -r /tmp/requirements.txt
+RUN pip install --no-cache-dir --default-timeout=300 --retries=10 -r /tmp/requirements.txt
 
-COPY config.py embeddings.py llm.py loader.py vectorstore.py rag.py main.py rag_system.py /app/
-COPY api /app/api/
+COPY . /app/
 
 # Échec du build si le module auth LDAP n'est pas présent dans l'image
 RUN test -f /app/api/auth/router.py && test -f /app/api/db/models.py

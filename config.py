@@ -51,19 +51,16 @@ QUESTION: {question}
 Réponse (courte et directe):"""
 
 
-# --- MySQL ---
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
     "mysql+pymysql://root:root@localhost:3306/sys_ges_doc",
 )
 
-# --- JWT ---
 JWT_SECRET = os.environ.get("JWT_SECRET", "dev-secret-change-in-production")
 JWT_ALGORITHM = "HS256"
 JWT_ACCESS_EXPIRE_MINUTES = int(os.environ.get("JWT_ACCESS_EXPIRE_MINUTES", "60"))
 JWT_REFRESH_EXPIRE_DAYS = int(os.environ.get("JWT_REFRESH_EXPIRE_DAYS", "7"))
 
-# --- LDAP ---
 LDAP_SERVER = os.environ.get("LDAP_SERVER", "ldap://localhost")
 LDAP_PORT = int(os.environ.get("LDAP_PORT", "389"))
 LDAP_USE_SSL = os.environ.get("LDAP_USE_SSL", "false").lower() in ("1", "true", "yes")
