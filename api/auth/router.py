@@ -89,10 +89,7 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
-    """
-    Inscription : création dans LDAP + MySQL avec le rôle « user ».
-    Les administrateurs sont définis uniquement en base (ex. Sahbi).
-    """
+    
     try:
         ldap_info = register_ldap_user(
             body.username,

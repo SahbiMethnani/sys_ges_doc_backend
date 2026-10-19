@@ -25,11 +25,6 @@ from api.routes import general, query, documents
 from api.auth.router import router as auth_router
 from api.auth.user_service import ensure_admin_seed
 from api.db.session import Base, SessionLocal, engine
-
-# ------------------------------------------------------------------
-# Application FastAPI
-# ------------------------------------------------------------------
-
 app = FastAPI(
     title="RAG API",
     description="API REST pour interroger des documents via RAG (LangChain + LanceDB + Ollama)",
@@ -52,56 +47,45 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ------------------------------------------------------------------
-# Enregistrement des routes
-# ------------------------------------------------------------------
-
 app.include_router(auth_router)
 app.include_router(general.router)
 app.include_router(query.router)
 app.include_router(documents.router)
 
-# ------------------------------------------------------------------
-# Démarrage
-# ------------------------------------------------------------------
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialise le système RAG au démarrage du serveur."""
-    print("🚀 Démarrage de l'API RAG...")
+    print(" Démarrage de l'API RAG...")
 
     try:
         Base.metadata.create_all(bind=engine)
         db = SessionLocal()
         ensure_admin_seed(db)
         db.close()
-        print("✅ Utilisateur admin MySQL vérifié (Sahbi)")
+        print(" Utilisateur admin MySQL vérifié (Sahbi)")
     except Exception as e:
-        print(f"⚠️  MySQL non disponible — auth limitée : {e}")
+        print(f" MySQL non disponible — auth limitée : {e}")
 
     os.makedirs(DOCUMENTS_FOLDER, exist_ok=True)
 
     embeddings = get_embeddings()
     llm = get_llm()
     rag = RAGSystem(vectorstore=None, llm=llm)
-    rag.embeddings = embeddings  # Exposé pour la réindexation
+    rag.embeddings = embeddings  #  rindexation
 
     if vector_index_exists():
         try:
             rag.vectorstore = load_vectorstore(embeddings)
-            print("✅ Base vectorielle chargée automatiquement")
+            print("Base vectorielle chargée automatiquement")
         except Exception as e:
-            print(f"⚠️  Impossible de charger la base vectorielle : {e}")
+            print(f" Impossible de charger la base vectorielle : {e}")
     else:
-        print("⚠️  Aucune base vectorielle trouvée. Uploadez des documents puis appelez POST /documents/index")
+        print(" Aucune base vectorielle trouvée. Uploadez des documents puis appelez POST /documents/index")
 
     set_rag(rag)
-    print("✅ Système RAG prêt")
+    print("Système RAG prêt")
 
 
-# ------------------------------------------------------------------
-# Lancement direct
-# ------------------------------------------------------------------
 
 if __name__ == "__main__":
     print("""
@@ -109,9 +93,9 @@ if __name__ == "__main__":
     ║        API RAG  —  Serveur en cours...         ║
     ╚════════════════════════════════════════════════╝
 
-    📡 URL       : http://localhost:8000
-    📚 Swagger   : http://localhost:8000/docs
-    🔄 ReDoc     : http://localhost:8000/redoc
+    URL       : http://localhost:8000
+    Swagger   : http://localhost:8000/docs
+    ReDoc     : http://localhost:8000/redoc
 
     Endpoints :
       POST  /auth/login            → Connexion LDAP
@@ -124,7 +108,6 @@ if __name__ == "__main__":
       DELETE /documents/{filename} → Supprimer un document
       GET   /status                → Statut du système
 
-    CTRL+C pour arrêter
     """)
 
     uvicorn.run("api.main:app", host="0.0.0.0", port=8000)

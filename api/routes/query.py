@@ -13,12 +13,6 @@ async def query_documents(
     request: QueryRequest,
     _user: User = Depends(get_current_user),
 ):
-    """
-    Pose une question au système RAG.
-
-    - **question**: La question en langage naturel
-    - **show_sources**: Inclure les documents sources dans la réponse
-    """
     rag = get_rag()
 
     if rag is None or rag.vectorstore is None:

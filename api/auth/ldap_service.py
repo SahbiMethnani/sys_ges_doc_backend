@@ -39,7 +39,6 @@ def _user_dn(username: str) -> str:
 
 
 def authenticate_ldap(username: str, password: str) -> dict | None:
-    """Vérifie identifiant/mot de passe via bind LDAP. Retourne les attributs ou None."""
     user_dn = _user_dn(username)
     try:
         conn = Connection(_server(), user=user_dn, password=password, auto_bind=True)
@@ -137,7 +136,6 @@ def change_ldap_password(user_dn: str, new_password: str) -> None:
 
 
 def ensure_users_ou() -> None:
-    """Crée l'OU users si elle n'existe pas (utile hors bootstrap Docker)."""
     ou_dn = LDAP_USER_SEARCH_BASE
     try:
         conn = _admin_connection()
