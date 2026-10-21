@@ -5,10 +5,8 @@ import pytest
 
 @pytest.mark.unit
 class TestConfigDefaults:
-    """Vérifie que config.py expose bien les variables attendues."""
 
     def test_llm_model_default(self):
-        """LLM_MODEL doit valoir 'mistral' par défaut (via monkeypatch)."""
         from config import LLM_MODEL
         assert isinstance(LLM_MODEL, str)
         assert len(LLM_MODEL) > 0
@@ -77,9 +75,7 @@ class TestConfigDefaults:
 
 @pytest.mark.unit
 class TestConfigEnvOverride:
-    """Vérifie que les variables d'environnement surchargent les valeurs par défaut."""
 
     def test_top_k_env_override(self, monkeypatch):
-        """TOP_K est fixe dans config.py ; on teste juste la valeur numérique."""
         from config import TOP_K_CHUNKS
-        assert TOP_K_CHUNKS == 3  # valeur par défaut dans le code source
+        assert TOP_K_CHUNKS == 3  
