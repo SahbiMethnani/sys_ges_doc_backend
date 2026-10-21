@@ -5,11 +5,6 @@ from unittest.mock import MagicMock, patch, call
 import pytest
 from langchain_core.documents import Document
 
-
-# ===========================================================================
-# Fixtures locales
-# ===========================================================================
-
 @pytest.fixture()
 def mock_hf_embeddings():
     emb = MagicMock()

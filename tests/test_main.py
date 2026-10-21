@@ -1,6 +1,3 @@
-# =============================================================
-# tests/test_main.py — Tests de la logique d'orchestration (main.py)
-# =============================================================
 
 import os
 from unittest.mock import MagicMock, patch

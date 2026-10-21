@@ -1,27 +1,11 @@
-# =============================================================
-# tests/conftest.py — Fixtures partagées entre tous les tests
-# =============================================================
-# IMPORTANT : aucun import langchain au niveau module
-# pour éviter les erreurs de chargement silencieuses de pytest.
-# Tous les imports langchain sont faits DANS les fixtures.
-# =============================================================
-
 import os
 from unittest.mock import MagicMock
 
 import pytest
 
 
-# ---------------------------------------------------------------------------
-# Isolation des chemins LanceDB & documents pour les tests
-# ---------------------------------------------------------------------------
-
 @pytest.fixture(autouse=True)
 def patch_env_paths(tmp_path, monkeypatch):
-    """
-    Redirige LANCE_DB_PATH et DOCUMENTS_FOLDER vers des dossiers temporaires
-    pour chaque test → aucune pollution du projet réel.
-    """
     lance_dir = str(tmp_path / "test_lance_db")
     docs_dir  = str(tmp_path / "test_documents")
     os.makedirs(docs_dir, exist_ok=True)
@@ -38,13 +22,9 @@ def patch_env_paths(tmp_path, monkeypatch):
     yield lance_dir, docs_dir
 
 
-# ---------------------------------------------------------------------------
-# Fixtures : documents LangChain factices
-# ---------------------------------------------------------------------------
 
 @pytest.fixture()
 def sample_documents():
-    """Trois documents LangChain minimaux — import différé."""
     from langchain_core.documents import Document
     return [
         Document(page_content="Python est un langage de programmation.",
@@ -58,7 +38,6 @@ def sample_documents():
 
 @pytest.fixture()
 def sample_txt_file(tmp_path):
-    """Crée un vrai fichier .txt dans un dossier temporaire."""
     docs_dir = tmp_path / "documents"
     docs_dir.mkdir()
     f = docs_dir / "hello.txt"
@@ -66,13 +45,9 @@ def sample_txt_file(tmp_path):
     return str(docs_dir), str(f)
 
 
-# ---------------------------------------------------------------------------
-# Fixtures : mocks des composants lourds (HuggingFace, LanceDB, Ollama)
-# ---------------------------------------------------------------------------
 
 @pytest.fixture()
 def mock_embeddings():
-    """Mock léger du modèle d'embeddings."""
     emb = MagicMock()
     emb.embed_documents.side_effect = lambda docs: [[0.1, 0.2, 0.3]] * len(docs)
     emb.embed_query.return_value     = [0.1, 0.2, 0.3]
@@ -81,7 +56,6 @@ def mock_embeddings():
 
 @pytest.fixture()
 def mock_llm():
-    """Mock du LLM Ollama."""
     llm = MagicMock()
     llm.invoke.return_value = "Réponse simulée du LLM."
     return llm
@@ -89,7 +63,6 @@ def mock_llm():
 
 @pytest.fixture()
 def mock_vectorstore(sample_documents):
-    """Mock d'un vectorstore LanceDB avec retriever fonctionnel."""
     vs = MagicMock()
     retriever = MagicMock()
     retriever.invoke.return_value = sample_documents[:2]
@@ -99,7 +72,6 @@ def mock_vectorstore(sample_documents):
 
 @pytest.fixture()
 def mock_qa_result(sample_documents):
-    """Résultat simulé d'un appel RetrievalQA."""
     return {
         "result":           "Python est un langage de programmation.",
         "source_documents": sample_documents[:2],

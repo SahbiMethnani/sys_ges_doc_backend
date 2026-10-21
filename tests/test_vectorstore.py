@@ -1,6 +1,3 @@
-# =============================================================
-# tests/test_vectorstore.py — Tests du module vectorstore.py
-# =============================================================
 
 import os
 from unittest.mock import MagicMock, patch, PropertyMock
@@ -9,22 +6,16 @@ import pytest
 from langchain_core.documents import Document
 
 
-# ---------------------------------------------------------------------------
-# Tests : vector_index_exists()
-# ---------------------------------------------------------------------------
 
 @pytest.mark.unit
 class TestVectorIndexExists:
-    """Tests de la fonction vector_index_exists()."""
 
     def test_returns_false_when_no_directory(self, tmp_path):
-        """Aucun dossier LanceDB → False."""
         with patch("vectorstore.LANCE_DB_PATH", str(tmp_path / "missing")):
             from vectorstore import vector_index_exists
             assert vector_index_exists() is False
 
     def test_returns_false_when_table_absent(self, tmp_path):
-        """Dossier présent mais table absente → False."""
         lance_dir = tmp_path / "lance_db"
         lance_dir.mkdir()
 
@@ -62,16 +53,10 @@ class TestVectorIndexExists:
             assert vector_index_exists() is False
 
 
-# ---------------------------------------------------------------------------
-# Tests : build_vectorstore()
-# ---------------------------------------------------------------------------
-
 @pytest.mark.unit
 class TestBuildVectorstore:
-    """Tests de la fonction build_vectorstore()."""
 
     def test_returns_lancedb_instance(self, sample_documents, mock_embeddings, tmp_path):
-        """build_vectorstore doit retourner un objet non-None."""
         mock_vs = MagicMock()
 
         with patch("vectorstore.LANCE_DB_PATH", str(tmp_path / "db")), \
@@ -122,16 +107,11 @@ class TestBuildVectorstore:
         assert result is mock_vs
 
 
-# ---------------------------------------------------------------------------
-# Tests : load_vectorstore()
-# ---------------------------------------------------------------------------
 
 @pytest.mark.unit
 class TestLoadVectorstore:
-    """Tests de la fonction load_vectorstore()."""
 
     def test_raises_when_table_missing(self, mock_embeddings, tmp_path):
-        """FileNotFoundError si la table n'existe pas."""
         mock_conn = MagicMock()
         mock_conn.table_names.return_value = []  # table absente
 
